@@ -5,8 +5,8 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
 
-    [SerializeField] private float movementSpeed;
-    private Vector2 movementDirection;
+    [SerializeField] private float speed;
+    private Vector2 moveDirection;
 
     void Awake()
     {
@@ -26,15 +26,12 @@ public class PlayerController : MonoBehaviour
         float inputX = Input.GetAxisRaw("Horizontal");
         float inputY = Input.GetAxisRaw("Vertical");
 
-        this.movementDirection = new Vector2(inputX, inputY).normalized;
-        spriteRenderer.flipX = (movementDirection.x < 0) || (movementDirection.x == 0 && spriteRenderer.flipX);
+        this.moveDirection = new Vector2(inputX, inputY).normalized;
+        spriteRenderer.flipX = (moveDirection.x < 0) || (moveDirection.x == 0 && spriteRenderer.flipX);
     }
 
     void FixedUpdate()
     {
-        this.rb.linearVelocity = new Vector2(
-            this.movementDirection.x * this.movementSpeed,
-            this.movementDirection.y * this.movementSpeed
-        );
+        this.rb.linearVelocity = this.moveDirection * this.speed;
     }
 }
