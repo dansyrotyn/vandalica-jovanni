@@ -17,35 +17,10 @@ public class PlayerController : MonoBehaviour
 
     private const string ANIM_TRIGGER_HURT = "Hurt";
 
-    private void Awake()
-    {
-        _rigidbody = GetComponent<Rigidbody2D>();
-        _spriteRenderer = GetComponent<SpriteRenderer>();
-        _animator = GetComponent<Animator>();
-
-        currentHealth = maxHealth;
-    }
-
     public void ApplyDamage(int damage)
     {
         currentHealth -= damage;
         _animator.SetTrigger(ANIM_TRIGGER_HURT);
-    }
-
-    private void Update()
-    {
-        HandleInput();
-        HandleSpriteFlip();
-
-        if (currentHealth <= 0)
-        {
-            Destroy(gameObject);
-        }
-    }
-
-    private void FixedUpdate()
-    {
-        Move();
     }
 
     private void HandleInput()
@@ -63,7 +38,27 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void Move()
+    private void Awake()
+    {
+        _rigidbody = GetComponent<Rigidbody2D>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _animator = GetComponent<Animator>();
+
+        currentHealth = maxHealth;
+    }
+
+    private void Update()
+    {
+        HandleInput();
+        HandleSpriteFlip();
+
+        if (currentHealth <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    private void FixedUpdate()
     {
         _rigidbody.linearVelocity = _moveDirection * speed;
     }
