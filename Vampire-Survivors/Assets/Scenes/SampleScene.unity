@@ -1699,6 +1699,11 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   CustomBlends: {fileID: 0}
+--- !u!4 &561925678 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7289916420862949719, guid: 61220bb384d51473e92f31c6e84de929, type: 3}
+  m_PrefabInstance: {fileID: 2076708390}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &574640532
 GameObject:
   m_ObjectHideFlags: 0
@@ -1768,7 +1773,7 @@ MonoBehaviour:
   m_StreamingVersion: 20241001
   m_LegacyPriority: 0
   Target:
-    TrackingTarget: {fileID: 0}
+    TrackingTarget: {fileID: 561925678}
     LookAtTarget: {fileID: 0}
     CustomLookAtTarget: 0
   Lens:
