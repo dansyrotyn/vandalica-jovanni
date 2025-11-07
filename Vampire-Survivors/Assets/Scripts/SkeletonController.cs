@@ -3,48 +3,47 @@ using UnityEngine;
 
 public class SkeletonController : MonoBehaviour
 {
-    private Rigidbody2D rb;
-    private PlayerController playerReference;
-    private SpriteRenderer spriteRenderer;
-    private Animator animator;
+    private Rigidbody2D _rb;
+    private PlayerController _playerReference;
+    private SpriteRenderer _spriteRenderer;
+    private Animator _animator;
 
-    [SerializeField] private float attackRadius = 1f;
-    [SerializeField] private float speed = 2f;
+    [SerializeField] private float _attackRadius = 1f;
+    [SerializeField] private float _speed = 2f;
 
-    private bool shouldDie;
-    private bool isDead;
-    private bool hasDealtDamageThisFrame;
+    private bool _shouldDie;
+    private bool _isDead;
+    private bool _hasDealtDamageThisFrame;
 
-    private Vector2 target;
-
+    private Vector2 _target;
     private const string ANIM_BOOL_DEAD = "Dead";
     private const string ANIM_TRIGGER_ATTACK_1 = "Attack1";
     private const string ANIM_ATTACK_1 = "SkeletonAttack1";
 
     void Start()
     {
-        playerReference = FindAnyObjectByType<PlayerController>();
-        rb = GetComponent<Rigidbody2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        animator = GetComponent<Animator>();
+        _playerReference = FindAnyObjectByType<PlayerController>();
+        _rb = GetComponent<Rigidbody2D>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _animator = GetComponent<Animator>();
     }
 
     private IEnumerator FadeOutAndDestroy()
     {
-        target = Vector2.zero;
-        isDead = true;
-        shouldDie = false;
-        animator.SetBool(ANIM_BOOL_DEAD, true);
+        _target = Vector2.zero;
+        _isDead = true;
+        _shouldDie = false;
+        _animator.SetBool(ANIM_BOOL_DEAD, true);
 
-        AnimatorStateInfo animInfo = animator.GetCurrentAnimatorStateInfo(0);
+        AnimatorStateInfo animInfo = _animator.GetCurrentAnimatorStateInfo(0);
         const int steps = 100;
         float stepTime = animInfo.length / steps;
-        Color color = spriteRenderer.color;
+        Color color = _spriteRenderer.color;
 
         for (int i = 0; i < steps; i++)
         {
             color.a = 1f - (i / (float)steps);
-            spriteRenderer.color = color;
+            _spriteRenderer.color = color;
             yield return new WaitForSeconds(stepTime);
         }
 
@@ -53,50 +52,50 @@ public class SkeletonController : MonoBehaviour
 
     void Update()
     {
-        if (this.playerReference == null || this.isDead)
+        if (_playerReference == null || _isDead)
         {
-            target = Vector2.zero;
+            _target = Vector2.zero;
             return;
         }
 
-        if (shouldDie)
+        if (_shouldDie)
         {
             StartCoroutine(FadeOutAndDestroy());
             return;
         }
 
-        spriteRenderer.flipX = playerReference.transform.position.x < transform.position.x;
+        _spriteRenderer.flipX = _playerReference.transform.position.x < transform.position.x;
 
-        AnimatorStateInfo animInfo = animator.GetCurrentAnimatorStateInfo(0);
-        float distanceToPlayer = Vector2.Distance(playerReference.transform.position, transform.position);
+        AnimatorStateInfo animInfo = _animator.GetCurrentAnimatorStateInfo(0);
+        float distanceToPlayer = Vector2.Distance(_playerReference.transform.position, transform.position);
         bool inAttack = animInfo.IsName(ANIM_ATTACK_1);
-        bool canAttack = distanceToPlayer < attackRadius && !inAttack;
-        bool shouldDamage = inAttack && animInfo.normalizedTime >= 0.5f && distanceToPlayer <= attackRadius * 1.1f;
+        bool canAttack = distanceToPlayer < _attackRadius && !inAttack;
+        bool shouldDamage = inAttack && animInfo.normalizedTime >= 0.5f && distanceToPlayer <= _attackRadius * 1.1f;
 
         if (canAttack)
         {
-            animator.SetTrigger(ANIM_TRIGGER_ATTACK_1);
-            target = Vector2.zero;
-            hasDealtDamageThisFrame = false;
+            _animator.SetTrigger(ANIM_TRIGGER_ATTACK_1);
+            _target = Vector2.zero;
+            _hasDealtDamageThisFrame = false;
             return;
         }
         else
         {
-            target = (playerReference.transform.position - transform.position).normalized;
+            _target = (_playerReference.transform.position - transform.position).normalized;
         }
 
-        if (shouldDamage && !hasDealtDamageThisFrame)
+        if (shouldDamage && !_hasDealtDamageThisFrame)
         {
-            playerReference.applyDamage(1);
-            hasDealtDamageThisFrame = true;
+            _playerReference.ApplyDamage(1);
+            _hasDealtDamageThisFrame = true;
         }
     }
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (this.playerReference == null || this.isDead)
+        if (_playerReference == null || _isDead)
         {
-            target = Vector2.zero;
+            _target = Vector2.zero;
             return;
         }
 
@@ -109,13 +108,13 @@ public class SkeletonController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (this.playerReference == null || this.isDead)
+        if (_playerReference == null || _isDead)
         {
-            target = Vector2.zero;
-            rb.linearVelocity = Vector2.zero;
+            _target = Vector2.zero;
+            _rb.linearVelocity = Vector2.zero;
             return;
         }
 
-        rb.linearVelocity = target * speed;
+        _rb.linearVelocity = _target * _speed;
     }
 }

@@ -324,7 +324,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1744218633
   m_SortingLayer: 3
-  m_SortingOrder: 1
+  m_SortingOrder: 3
   m_Sprite: {fileID: 8891180011573125036, guid: 772153ff4f636472e9df1b51e37f6294, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -2137,7 +2137,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1744218633
   m_SortingLayer: 3
-  m_SortingOrder: 1
+  m_SortingOrder: 3
   m_Sprite: {fileID: -2892819179972619951, guid: 772153ff4f636472e9df1b51e37f6294, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -8337,11 +8337,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcbb94f305c2942a38685b11a2d36487, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SkeletonSpawner
-  groundTilemap: {fileID: 1590277744}
-  entityPrefab: {fileID: 7093695742421028849, guid: 84889462f215749aabfaa2b00bc264ac, type: 3}
-  spawnCount: 10
-  spawnCooldownTime: 5
-  spawnCurrnetCooldownTime: 0
+  _groundTilemap: {fileID: 1590277744}
+  _entityPrefab: {fileID: 7093695742421028849, guid: 84889462f215749aabfaa2b00bc264ac, type: 3}
+  _spawnCount: 10
+  _spawnCooldownTime: 5
+  _spawnCurrnetCooldownTime: 0
 --- !u!4 &1724083651
 Transform:
   m_ObjectHideFlags: 0

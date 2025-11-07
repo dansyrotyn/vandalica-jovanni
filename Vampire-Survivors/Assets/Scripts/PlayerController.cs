@@ -1,49 +1,70 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private Rigidbody2D rb;
-    private SpriteRenderer spriteRenderer;
-    private Animator animator;
+    [Header("Components")]
+    private Rigidbody2D _rigidbody;
+    private SpriteRenderer _spriteRenderer;
+    private Animator _animator;
+
+    [Header("Player Stats")]
     [SerializeField] private int maxHealth = 3;
-    [SerializeField] private int health;
+    [SerializeField] private int currentHealth;
 
-    [SerializeField] private float speed;
-    private Vector2 moveDirection;
+    [Header("Movement")]
+    [SerializeField] private float speed = 5f;
+    private Vector2 _moveDirection;
 
-    private readonly string ANIM_TRIGGER_HURT = "Hurt";
+    private const string ANIM_TRIGGER_HURT = "Hurt";
 
-    void Awake()
+    private void Awake()
     {
-        this.health = maxHealth;
-        this.rb = GetComponent<Rigidbody2D>();
-        this.spriteRenderer = GetComponent<SpriteRenderer>();
-        this.animator = GetComponent<Animator>();
-    }
-    
-    public void applyDamage(int dmg)
-    {
-        this.health -= dmg;
-        this.animator.SetTrigger(ANIM_TRIGGER_HURT);
+        _rigidbody = GetComponent<Rigidbody2D>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _animator = GetComponent<Animator>();
+
+        currentHealth = maxHealth;
     }
 
-    void Update()
+    public void ApplyDamage(int damage)
     {
-        float inputX = Input.GetAxisRaw("Horizontal");
-        float inputY = Input.GetAxisRaw("Vertical");
+        currentHealth -= damage;
+        _animator.SetTrigger(ANIM_TRIGGER_HURT);
+    }
 
-        this.moveDirection = new Vector2(inputX, inputY).normalized;
-        spriteRenderer.flipX = (moveDirection.x < 0) || (moveDirection.x == 0 && spriteRenderer.flipX);
+    private void Update()
+    {
+        HandleInput();
+        HandleSpriteFlip();
 
-        if (this.health <= 0)
+        if (currentHealth <= 0)
         {
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-        this.rb.linearVelocity = this.moveDirection * this.speed;
+        Move();
+    }
+
+    private void HandleInput()
+    {
+        float inputX = Input.GetAxisRaw("Horizontal");
+        float inputY = Input.GetAxisRaw("Vertical");
+        _moveDirection = new Vector2(inputX, inputY).normalized;
+    }
+
+    private void HandleSpriteFlip()
+    {
+        if (_moveDirection.x != 0)
+        {
+            _spriteRenderer.flipX = _moveDirection.x < 0;
+        }
+    }
+
+    private void Move()
+    {
+        _rigidbody.linearVelocity = _moveDirection * speed;
     }
 }

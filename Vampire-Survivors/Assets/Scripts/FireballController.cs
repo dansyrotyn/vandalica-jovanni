@@ -4,18 +4,18 @@ using UnityEngine.UIElements;
 
 public class FireballController : MonoBehaviour
 {
-    private float angle;
-    [SerializeField] private float speed = 4.0f;
-    [SerializeField] private float radius = 0.20f;
+    private float _angle;
+    [SerializeField] private float _speed = 4.0f;
+    [SerializeField] private float _radius = 0.20f;
 
     void Update()
     {
-        angle += this.speed * Time.deltaTime;
+        _angle += _speed * Time.deltaTime;
 
         Vector2 position = Vector2.zero;
-        position.x = this.radius * Mathf.Cos(angle);
-        position.y = this.radius * Mathf.Sin(angle);
+        position.x = _radius * Mathf.Cos(_angle);
+        position.y = _radius * Mathf.Sin(_angle);
 
-        this.transform.localPosition = position;
+        transform.localPosition = position;
     }
 }
