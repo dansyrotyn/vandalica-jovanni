@@ -21,12 +21,6 @@ public class PlayerController : MonoBehaviour
         this.spriteRenderer = GetComponent<SpriteRenderer>();
         this.animator = GetComponent<Animator>();
     }
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-
-    }
     
     public void applyDamage(int dmg)
     {
@@ -34,7 +28,6 @@ public class PlayerController : MonoBehaviour
         this.animator.SetTrigger(ANIM_TRIGGER_HURT);
     }
 
-    // Update is called once per frame
     void Update()
     {
         float inputX = Input.GetAxisRaw("Horizontal");

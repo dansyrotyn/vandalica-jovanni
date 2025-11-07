@@ -8,7 +8,6 @@ public class FireballController : MonoBehaviour
     [SerializeField] private float speed = 4.0f;
     [SerializeField] private float radius = 0.20f;
 
-    // Update is called once per frame
     void Update()
     {
         angle += this.speed * Time.deltaTime;
