@@ -18,6 +18,11 @@ public class SkeletonController : MonoBehaviour
     private const string ANIM_BOOL_DEAD = "Dead";
     private const string ANIM_TRIGGER_ATTACK_1 = "Attack1";
     private const string ANIM_ATTACK_1 = "SkeletonAttack1";
+    
+    public void AddSpeed(float speed)
+    {
+        _speed += speed;
+    }
 
     bool CanUpdate()
     {

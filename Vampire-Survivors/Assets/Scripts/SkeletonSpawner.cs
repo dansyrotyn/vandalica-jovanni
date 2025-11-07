@@ -14,14 +14,18 @@ public class SkeletonSpawner : MonoBehaviour
     [SerializeField] private float _spawnCurrnetCooldownTime = 0.0f;
     private List<Vector3Int> _groundCells;
 
+    private float _blueGreenColor = 1.0f;
+    private float _additionalAnimationSpeed = 0.1f;
+    private float _additionalMovementSpeed = 0.1f;
+
     void Start()
     {
         _groundCells = new List<Vector3Int>();
         BoundsInt bounds = _groundTilemap.cellBounds;
 
-        for (int x = bounds.xMin + 1; x < bounds.xMax - 1; x++)
+        for (int x = bounds.xMin + 2; x < bounds.xMax - 2; x++)
         {
-            for (int y = bounds.yMin + 1; y < bounds.yMax - 1; y++)
+            for (int y = bounds.yMin + 2; y < bounds.yMax - 2; y++)
             {
                 Vector3Int cell = new Vector3Int(x, y, 0);
                 if (_groundTilemap.HasTile(cell))
@@ -39,6 +43,9 @@ public class SkeletonSpawner : MonoBehaviour
             SpawnOnGroundLayer();
             _spawnCurrnetCooldownTime = _spawnCooldownTime;
             _spawnCount += 10;
+            _additionalAnimationSpeed *= 1.1f;
+            _additionalMovementSpeed *= 1.1f;
+            _blueGreenColor = Math.Max(_blueGreenColor - 0.1f, 0f);
         }
         else
         {
@@ -52,7 +59,18 @@ public class SkeletonSpawner : MonoBehaviour
         {
             Vector3Int cell = _groundCells[Random.Range(0, _groundCells.Count - 1)];
             Vector3 worldPos = _groundTilemap.CellToWorld(cell) + _groundTilemap.tileAnchor;
-            Instantiate(_entityPrefab, worldPos, Quaternion.identity, transform);
+            GameObject skeletonObject = Instantiate(_entityPrefab, worldPos, Quaternion.identity, transform);
+            SkeletonController skeleton = skeletonObject.GetComponent<SkeletonController>();
+            SpriteRenderer skeletonRenderer = skeleton.GetComponent<SpriteRenderer>();
+            Animator skeletonAnim = skeleton.GetComponent<Animator>();
+            Color skeletonColor = skeletonRenderer.color;
+            skeletonColor.r = 1.0f;
+            skeletonColor.g = _blueGreenColor;
+            skeletonColor.b = _blueGreenColor;
+
+            skeleton.AddSpeed(_additionalMovementSpeed);
+            skeletonAnim.speed += _additionalAnimationSpeed;
+            skeletonRenderer.color = skeletonColor;
         }
     }
 }
