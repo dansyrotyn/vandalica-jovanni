@@ -25,6 +25,15 @@ public class PlayerController : MonoBehaviour
         float inputX = Input.GetAxisRaw("Horizontal");
         float inputY = Input.GetAxisRaw("Vertical");
         _moveDirection = new Vector2(inputX, inputY).normalized;
+
+        if (Input.GetKeyDown(KeyCode.Escape) && !GameState.Instance.IsPaused())
+        {
+            GameState.Instance.PauseGame();
+        }
+        else if (Input.GetKeyDown(KeyCode.Escape) && GameState.Instance.IsPaused())
+        {
+            GameState.Instance.ResumeGame();
+        }
     }
 
     private void HandleSpriteFlip()

@@ -23,15 +23,8 @@ public class EnemyWaveSpawner : MonoBehaviour
     private float _additionalAnimationSpeed = 0.1f;
     private float _additionalMovementSpeed = 0.1f;
 
-    public int GetWaveNumber()
-    {
-        return _waveNumber;
-    }
-
-    public bool IsOnCooldown()
-    {
-        return _spawnCurrnetCooldownTime > 0.0f;
-    }
+    public int GetWaveNumber() =>  _waveNumber;
+    public bool IsOnCooldown() => _spawnCurrnetCooldownTime > 0.0f;
 
     void SpawnOnGroundLayer()
     {

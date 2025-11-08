@@ -12,17 +12,20 @@ public class GameState : MonoBehaviour
     [Header("UI Refs")]
     [SerializeField] private TMP_Text _timeText;
     [SerializeField] private TMP_Text _waveText;
+    [SerializeField] private GameObject _pauseMenuPanel;
+
+    public bool IsPaused() => _isPaused;
 
     public void ResumeGame()
     {
-        // _pauseMenuUI.SetActive(false);
+        _pauseMenuPanel.SetActive(false);
         Time.timeScale = 1f; // Resumes time
         _isPaused = false;
     }
 
-    void PauseGame()
+    public void PauseGame()
     {
-        // _pauseMenuUI.SetActive(true);
+        _pauseMenuPanel.SetActive(true);
         Time.timeScale = 0f; // Pauses time
         _isPaused = true;
     }

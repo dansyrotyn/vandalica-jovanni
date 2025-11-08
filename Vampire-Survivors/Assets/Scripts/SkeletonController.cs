@@ -25,10 +25,7 @@ public class SkeletonController : MonoBehaviour
         _speed += speed;
     }
 
-    bool CanUpdate()
-    {
-        return _playerReference && !_isDead;
-    }
+    private bool CanUpdate() => _playerReference && !_isDead;
 
     private IEnumerator FadeOutAndDestroy()
     {
