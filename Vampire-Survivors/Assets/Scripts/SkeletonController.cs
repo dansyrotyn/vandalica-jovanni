@@ -13,6 +13,7 @@ public class SkeletonController : MonoBehaviour
 
     private bool _isDead = false;
     private bool _damagedPlayerThisFrame = false;
+    private bool _triedToAttackedPlayer = false;
 
     private Vector2 _target;
     private const string ANIM_BOOL_DEAD = "Dead";
@@ -71,10 +72,11 @@ public class SkeletonController : MonoBehaviour
         bool isAttacking = animInfo.IsName(ANIM_ATTACK_1);
         float distanceToPlayer = Vector2.Distance(_playerReference.transform.position, transform.position);
         bool isCloseEnoughToAttackPlayer = distanceToPlayer <= _attackRadius;
-        if (!isAttacking && isCloseEnoughToAttackPlayer)
+        if (!isAttacking && !_triedToAttackedPlayer && isCloseEnoughToAttackPlayer)
         {
             _speed = 0f;
             _animator.SetTrigger(ANIM_TRIGGER_ATTACK_1);
+            _triedToAttackedPlayer = true;
         }
         else if (!isAttacking)
         {
@@ -87,6 +89,7 @@ public class SkeletonController : MonoBehaviour
         {
             _playerReference.ApplyDamage(1);
             _damagedPlayerThisFrame = true;
+            _triedToAttackedPlayer = false;
         }
 
         _target = (_playerReference.transform.position - transform.position).normalized;

@@ -2,20 +2,17 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("Components")]
     private Rigidbody2D _rigidbody;
     private SpriteRenderer _spriteRenderer;
     private Animator _animator;
 
+    private Vector2 _moveDirection;
+    private const string ANIM_TRIGGER_HURT = "Hurt";
+    
     [Header("Player Stats")]
     [SerializeField] private int maxHealth = 3;
     [SerializeField] private int currentHealth;
-
-    [Header("Movement")]
     [SerializeField] private float speed = 5f;
-    private Vector2 _moveDirection;
-
-    private const string ANIM_TRIGGER_HURT = "Hurt";
 
     public void ApplyDamage(int damage)
     {
