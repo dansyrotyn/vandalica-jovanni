@@ -1,7 +1,7 @@
-using System;
 using TMPro;
-using Unity.Burst;
 using UnityEngine;
+using System.Collections.Generic;
+using UnityEngine.Tilemaps;
 
 public class GameState : MonoBehaviour
 {
@@ -13,8 +13,12 @@ public class GameState : MonoBehaviour
     [SerializeField] private TMP_Text _timeText;
     [SerializeField] private TMP_Text _waveText;
     [SerializeField] private GameObject _pauseMenuPanel;
+    [SerializeField] private Tilemap _groundTilemap;
+
+    private List<Vector3> _playableArea;
 
     public bool IsPaused() => _isPaused;
+    public List<Vector3> GetPlayableArea() => _playableArea;
 
     public void ResumeGame()
     {
@@ -30,25 +34,39 @@ public class GameState : MonoBehaviour
         _isPaused = true;
     }
 
-    private void Awake() 
-    { 
-        if (Instance != null && Instance != this) 
-        { 
-            Destroy(this); 
-        } 
-        else 
-        { 
-            Instance = this; 
-        } 
-    }
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Awake()
     {
-
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
     }
 
-    // Update is called once per frame
+    // rework this
+    private void Start()
+    {
+        _playableArea = new List<Vector3>();
+
+        BoundsInt bounds = _groundTilemap.cellBounds;
+        for (int x = bounds.xMin + 2; x < bounds.xMax - 2; x++)
+        {
+            for (int y = bounds.yMin + 2; y < bounds.yMax - 2; y++)
+            {
+                Vector3Int cell = new Vector3Int(x, y, 0);
+                if (_groundTilemap.HasTile(cell))
+                {
+                    Vector3 worldPos = _groundTilemap.GetCellCenterWorld(cell);
+                    _playableArea.Add(worldPos);
+                }
+            }
+        }
+    }
+
+
     void Update()
     {
         _monotonicTimer += Time.deltaTime;
