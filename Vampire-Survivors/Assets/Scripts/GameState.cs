@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using Unity.Burst;
 using UnityEngine;
@@ -48,6 +49,10 @@ public class GameState : MonoBehaviour
     void Update()
     {
         _monotonicTimer += Time.deltaTime;
+
+        // Note(Jovanni):
+        // This is probably not great for performance 
+        // because you are doing allocations of some kind every frame.
         _timeText.text = "Time: " + _monotonicTimer.ToString("0.00");
 
         if (!EnemyWaveSpawner.Instance.IsOnCooldown())

@@ -59,6 +59,11 @@ public class SkeletonController : MonoBehaviour
         _animator = GetComponent<Animator>();
     }
 
+    // I would like this simplify this attack logic
+    // basically I want to say:
+    // play attack animation 
+    // _isAttacking = true 
+    // if close enough apply damage just once!
     void Update()
     {
         if (!CanUpdate()) 
