@@ -26,7 +26,7 @@ public class AIController : MonoBehaviour
         if ((_target == Vector3.zero) || _follow.CloseToTarget())
         {
             _target = GetNewRandomTargetPosition();
-            this._follow.SetTarget(_target);
+            _follow.SetTarget(_target);
         }
     }
 }

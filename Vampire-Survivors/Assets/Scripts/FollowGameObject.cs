@@ -24,12 +24,12 @@ public class FollowGameObject : MonoBehaviour
         _target = target;
     }
 
-    void Start()
+    private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         if (_target == null)
         {

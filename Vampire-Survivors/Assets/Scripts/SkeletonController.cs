@@ -65,7 +65,7 @@ public class SkeletonController : MonoBehaviour
         return null;
     }
 
-    void Start()
+    private void Start()
     {
         _follow = GetComponent<FollowGameObject>();
         _rb = GetComponent<Rigidbody2D>();

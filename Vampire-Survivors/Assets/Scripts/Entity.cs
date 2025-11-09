@@ -10,7 +10,7 @@ public class Entity : MonoBehaviour
     [SerializeField] protected int _maxHealth;
     [SerializeField] protected bool _isDead;
 
-    private void Start()
+    private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();

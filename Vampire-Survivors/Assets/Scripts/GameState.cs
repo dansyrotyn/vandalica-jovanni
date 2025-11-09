@@ -100,6 +100,9 @@ public class GameState : MonoBehaviour
             return;
         }
 
+        // TODO(Jovanni):
+        // Ensure correctness
+        // for example does adding a component call awake?
         if (_cinemachineCamera.Follow == null)
         {
             GameObject entityToFollow = PlayerList[Random.Range(0, PlayerList.Count)];
