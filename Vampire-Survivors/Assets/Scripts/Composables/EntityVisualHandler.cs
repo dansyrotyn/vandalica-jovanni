@@ -2,7 +2,7 @@ using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class EntityVisualHanlder : MonoBehaviour
+public class EntityVisualHandler : MonoBehaviour
 {
     public SpriteRenderer SpriteRenderer { set; get; }
     public Animator Animator { set; get; }

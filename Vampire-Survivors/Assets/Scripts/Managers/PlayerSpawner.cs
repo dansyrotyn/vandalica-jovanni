@@ -16,20 +16,22 @@ public class PlayerSpawner : MonoBehaviour
         GameObject prefab = PickRandomPlayerPrefab();
         Transform spawnPoint = PickRandomSpawnPoint();
 
-        GameObject obj = Instantiate(prefab, spawnPoint.position, Quaternion.identity);
+        EntityPlayer entity = Instantiate(prefab, spawnPoint.position, Quaternion.identity).GetComponent<EntityPlayer>();
         if (useAI)
         {
-            obj.AddComponent<AIController>();
-            FollowPositionTarget follow = obj.AddComponent<FollowPositionTarget>();
+            FollowPositionTarget follow = entity.gameObject.AddComponent<FollowPositionTarget>();
             follow.SetSpeed(5.0f);
+
+            AIController controller = entity.gameObject.AddComponent<AIController>();
+            controller.SetPlayerReference(entity);
         }
         else
         {
-            obj.AddComponent<PlayerController>();
+            entity.gameObject.AddComponent<PlayerController>();
         }
 
-        GameManager.Instance.PlayerList.Add(obj.GetComponent<EntityPlayer>());
-        return obj;
+        GameManager.Instance.PlayerList.Add(entity);
+        return entity.gameObject;
     }
 
     private GameObject PickRandomPlayerPrefab()

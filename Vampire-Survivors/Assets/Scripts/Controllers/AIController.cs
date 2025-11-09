@@ -3,9 +3,16 @@ using System.Collections.Generic;
 
 public class AIController : MonoBehaviour
 {
+    EntityPlayer _playerReference;
     private Rigidbody2D _rb;
     private FollowPositionTarget _follow;
     private Vector3 _target;
+
+
+    public void SetPlayerReference(EntityPlayer playerReference)
+    {
+        _playerReference = playerReference;
+    }
 
     private void Start()
     {
@@ -23,6 +30,12 @@ public class AIController : MonoBehaviour
 
     private void Update()
     {
+        if (_playerReference == null || _playerReference.IsDead())
+        {
+            _follow.SetTarget(null);
+            return;
+        }
+
         if ((_target == Vector3.zero) || _follow.CloseToTarget())
         {
             _target = GetNewRandomTargetPosition();

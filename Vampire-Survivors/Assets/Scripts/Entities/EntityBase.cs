@@ -4,7 +4,7 @@ using UnityEngine.VFX;
 public abstract class Entity : MonoBehaviour, IDamagable
 {
     protected Rigidbody2D _rb;
-    protected EntityVisualHanlder _visual;
+    protected EntityVisualHandler _visual;
 
     [Header("Entity Info")]
     [SerializeField] protected int _health;
@@ -17,7 +17,7 @@ public abstract class Entity : MonoBehaviour, IDamagable
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
-        _visual = GetComponent<EntityVisualHanlder>();
+        _visual = GetComponent<EntityVisualHandler>();
         _health = _maxHealth;
     }
 }

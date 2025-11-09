@@ -1986,12 +1986,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b85170233fd764847af203467aa8622d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameState
+  EventControllablePlayerIsDead:
+    m_PersistentCalls:
+      m_Calls: []
   _timeText: {fileID: 141932293}
   _waveText: {fileID: 922032211}
   _pauseMenuPanel: {fileID: 383751565}
   _groundTilemap: {fileID: 1590277744}
   _cinemachineCamera: {fileID: 424109938}
-  _playableArea: []
 --- !u!1 &383751565
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,16 +1,33 @@
 using System.Threading.Tasks;
+using UnityEditor.Animations;
 using UnityEngine;
 
 public class HeroEntity : EntityPlayer
 {
+    [SerializeField] private GameObject _UIHeartGrid;
+    [SerializeField] private GameObject _heartPrefab;
+    
     private const string ANIM_TRIGGER_HURT = "Hurt";
     private const string ANIM_BOOL_DEAD = "Dead";
     private const string ANIM_DEATH = "KnightDeathAnim";
+
+    void Start()
+    {
+        for (int i = 0; i < _maxHealth; i++)
+        {
+            Instantiate(_heartPrefab, _UIHeartGrid.transform);
+        }
+    }
 
     public override void Damage(int damage)
     {
         _health -= damage;
         _visual.Animator.SetTrigger(ANIM_TRIGGER_HURT);
+        if (_UIHeartGrid.transform.childCount != 0)
+        {
+            Transform child = _UIHeartGrid.transform.GetChild(0);
+            Destroy(child.gameObject);
+        }
     }
 
     private void HandleSpriteFlip()

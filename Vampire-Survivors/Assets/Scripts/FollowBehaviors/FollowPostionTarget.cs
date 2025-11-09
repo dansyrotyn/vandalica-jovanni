@@ -1,10 +1,11 @@
+using System;
 using UnityEngine;
 
 public class FollowPositionTarget : MonoBehaviour
 {
     [SerializeField] private float _speed = 1.0f;
     [SerializeField] private float _distanceOffsetFromTarget = 0.05f;
-    [SerializeField] private Vector3 _target = Vector3.zero;
+    [SerializeField] private Vector3? _target = Vector3.zero;
 
     private Rigidbody2D _rb;
 
@@ -13,14 +14,14 @@ public class FollowPositionTarget : MonoBehaviour
         _speed = speed;
     }
 
-    public void SetTarget(Vector3 target)
+    public void SetTarget(Vector3? target)
     {
         _target = target;
     }
 
     public bool CloseToTarget()
     {
-        float distanceFromTarget = Vector3.Distance(_target, this.transform.position);
+        float distanceFromTarget = Vector3.Distance(_target.Value, this.transform.position);
         return distanceFromTarget <= _distanceOffsetFromTarget;
     }
 
@@ -31,7 +32,7 @@ public class FollowPositionTarget : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (_target == null)
+        if (!_target.HasValue)
         {
             _rb.linearVelocity = Vector3.zero; 
             return;
@@ -43,7 +44,7 @@ public class FollowPositionTarget : MonoBehaviour
         }
         else
         {
-            _rb.linearVelocity = (_target - this.transform.position).normalized * _speed;
+            _rb.linearVelocity = (_target.Value - this.transform.position).normalized * _speed;
         }
     }
 }
