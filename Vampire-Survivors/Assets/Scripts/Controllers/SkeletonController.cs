@@ -9,8 +9,7 @@ public class SkeletonController : EntityEnemy
     private FollowGameObject _follow;
 
     [SerializeField] private float _attackRadius = 1f;
-    private bool _damagedPlayerThisFrame = false;
-    private bool _triedToAttackedPlayer = false;
+    private bool _attackingPlayer = false;
 
     private const string ANIM_TRIGGER_ATTACK_1 = "Attack1";
 
@@ -41,21 +40,27 @@ public class SkeletonController : EntityEnemy
         return null;
     }
 
+    private void AttackPlayer()
+    {
+        float distanceToPlayer = Vector2.Distance(_playerReference.transform.position, transform.position);
+        if (distanceToPlayer <= _attackRadius)
+        {
+            _playerReference.Damage(1);
+        }
+    }
+
+    private void EndAttackAnimation()
+    {
+        _attackingPlayer = false;
+    }
+
     private void Start()
     {
         _follow = GetComponent<FollowGameObject>();
     }
 
-    // I would like this simplify this attack logic
-    // basically I want to say:
-    // play attack animation 
-    // _isAttacking = true 
-    // if close enough apply damage just once!
-
-    // Make this animation events!
     void Update()
     {
-        // NOTE(Jovanni): probably horrible for perforance but I will fix this.
         _playerReference = GetClosestPlayer();
         if (!CanUpdate())
         {
@@ -64,27 +69,13 @@ public class SkeletonController : EntityEnemy
 
         _follow.SetTarget(_playerReference.gameObject);
         _visual.FaceTarget(_playerReference.transform);
-        AnimatorStateInfo animInfo = _visual.Animator.GetCurrentAnimatorStateInfo(0);
 
-        bool isAttacking = animInfo.IsName(ANIM_ATTACK_1);
         float distanceToPlayer = Vector2.Distance(_playerReference.transform.position, transform.position);
         bool isCloseEnoughToAttackPlayer = distanceToPlayer <= _attackRadius;
-        if (!isAttacking && !_triedToAttackedPlayer && isCloseEnoughToAttackPlayer)
+        if (!_attackingPlayer && isCloseEnoughToAttackPlayer)
         {
+            _attackingPlayer = true;
             _visual.Animator.SetTrigger(ANIM_TRIGGER_ATTACK_1);
-            _triedToAttackedPlayer = true;
-        }
-        else if (!isAttacking)
-        {
-            _damagedPlayerThisFrame = false;
-        }
-
-        bool shouldDamagePlayer = (animInfo.normalizedTime >= 0.5f) && (distanceToPlayer <= _attackRadius * 1.1f);
-        if (isAttacking && !_damagedPlayerThisFrame && shouldDamagePlayer)
-        {
-            _playerReference.Damage(1);
-            _damagedPlayerThisFrame = true;
-            _triedToAttackedPlayer = false;
         }
     }
     
