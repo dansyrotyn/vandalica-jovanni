@@ -17,7 +17,7 @@ public class GameState : MonoBehaviour
     [SerializeField] private Tilemap _groundTilemap;
     [SerializeField] private CinemachineCamera _cinemachineCamera;
 
-    private List<Vector3> _playableArea;
+    [SerializeField] private List<Vector3> _playableArea;
 
     public bool IsPaused() => _isPaused;
     public List<Vector3> GetPlayableArea() => _playableArea;
@@ -48,20 +48,21 @@ public class GameState : MonoBehaviour
         }
     }
 
-    // rework this
     private void Start()
     {
         _playableArea = new List<Vector3>();
 
-        BoundsInt bounds = _groundTilemap.cellBounds;
-        for (int x = bounds.xMin + 2; x < bounds.xMax - 2; x++)
+        int bounds = 8;
+        var boundsRect = _groundTilemap.cellBounds;
+
+        for (int x = boundsRect.xMin + bounds; x < boundsRect.xMax - bounds; x++)
         {
-            for (int y = bounds.yMin + 2; y < bounds.yMax - 2; y++)
+            for (int y = boundsRect.yMin + bounds; y < boundsRect.yMax - bounds; y++)
             {
-                Vector3Int cell = new Vector3Int(x, y, 0);
-                if (_groundTilemap.HasTile(cell))
+                Vector3Int localPlace = new Vector3Int(x, y, 0);
+                if (_groundTilemap.HasTile(localPlace))
                 {
-                    Vector3 worldPos = _groundTilemap.GetCellCenterWorld(cell);
+                    Vector3 worldPos = _groundTilemap.CellToWorld(localPlace) + new Vector3(0.5f, 0.5f, 0f);
                     _playableArea.Add(worldPos);
                 }
             }
@@ -70,8 +71,9 @@ public class GameState : MonoBehaviour
         GameObject player = PlayerSpawner.Instance.SpawnPlayer(false);
         _cinemachineCamera.Follow = player.transform;
         _cinemachineCamera.LookAt = player.transform;
-    }
 
+        GameObject ai = PlayerSpawner.Instance.SpawnPlayer(true);
+    }
 
     void Update()
     {

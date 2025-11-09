@@ -3,59 +3,30 @@ using System.Collections.Generic;
 
 public class AIController : MonoBehaviour
 {
-    private Rigidbody2D _rigidbody;
-    private SpriteRenderer _spriteRenderer;
-    private Animator _animator;
-
-    private Vector2 _moveDirection;
-    private const string ANIM_TRIGGER_HURT = "Hurt";
-    
-    [Header("Player Stats")]
-    [SerializeField] private int maxHealth = 3;
-    [SerializeField] private int currentHealth;
-    [SerializeField] private float speed = 5f;
-
-    public void ApplyDamage(int damage)
-    {
-        currentHealth -= damage;
-        _animator.SetTrigger(ANIM_TRIGGER_HURT);
-    }
-
-    private void HandleSpriteFlip()
-    {
-        if (_moveDirection.x != 0)
-        {
-            _spriteRenderer.flipX = _moveDirection.x < 0;
-        }
-    }
+    private Rigidbody2D _rb;
+    private FollowPositionTarget _follow;
+    private Vector3 _target;
 
     private void Start()
     {
-        _rigidbody = GetComponent<Rigidbody2D>();
-        _spriteRenderer = GetComponent<SpriteRenderer>();
-        _animator = GetComponent<Animator>();
-
-        currentHealth = maxHealth;
+        _rb = GetComponent<Rigidbody2D>();
+        _follow = GetComponent<FollowPositionTarget>();
     }
 
-    void HandleMovement()
+    private Vector3 GetNewRandomTargetPosition()
     {
-        // GameState.Instance.GetPlayableArea()
+        List<Vector3> area = GameState.Instance.GetPlayableArea();
+        int index = Random.Range(0, area.Count);
+        
+        return area[index];
     }
 
     private void Update()
     {
-        HandleMovement();
-        HandleSpriteFlip();
-
-        if (currentHealth <= 0)
+        if ((_target == Vector3.zero) || _follow.CloseToTarget())
         {
-            Destroy(gameObject);
+            _target = GetNewRandomTargetPosition();
+            this._follow.SetTarget(_target);
         }
-    }
-
-    private void FixedUpdate()
-    {
-        _rigidbody.linearVelocity = _moveDirection * speed;
     }
 }

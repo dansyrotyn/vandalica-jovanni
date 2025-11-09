@@ -8,7 +8,6 @@ public class PlayerSpawner : MonoBehaviour
     public static PlayerSpawner Instance { get; private set; }
 
     [SerializeField] private List<GameObject> _players;
-
     [SerializeField] private List<GameObject> _prefabs;
 
     private List<Transform> _spawnPoints;
@@ -16,7 +15,16 @@ public class PlayerSpawner : MonoBehaviour
 
     public GameObject GetPlayer()
     {
-        return _players[0];
+        foreach (GameObject player in _players)
+        {
+            if (player != null)
+            {
+                return player;
+            }
+        }
+
+        Debug.LogError("This should not really be possible...");
+        return null;
     }
 
     public GameObject SpawnPlayer(bool useAI)
@@ -28,6 +36,8 @@ public class PlayerSpawner : MonoBehaviour
         if (useAI)
         {
             obj.AddComponent<AIController>();
+            FollowPositionTarget follow = obj.AddComponent<FollowPositionTarget>();
+            follow.SetSpeed(5.0f);
         }
         else
         {

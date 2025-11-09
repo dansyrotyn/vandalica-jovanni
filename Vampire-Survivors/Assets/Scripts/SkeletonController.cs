@@ -7,6 +7,7 @@ public class SkeletonController : MonoBehaviour
     private HeroEntity _playerReference;
     private SpriteRenderer _spriteRenderer;
     private Animator _animator;
+    private FollowGameObject _follow;
 
     [SerializeField] private float _attackRadius = 1f;
 
@@ -14,16 +15,14 @@ public class SkeletonController : MonoBehaviour
     private bool _damagedPlayerThisFrame = false;
     private bool _triedToAttackedPlayer = false;
 
-    private Vector2 _target;
     private const string ANIM_BOOL_DEAD = "Dead";
     private const string ANIM_TRIGGER_ATTACK_1 = "Attack1";
     private const string ANIM_ATTACK_1 = "SkeletonAttack1";
 
-    private bool CanUpdate() => _playerReference && !_isDead;
+    private bool CanUpdate() => (_playerReference != null) && !_isDead;
 
     private IEnumerator FadeOutAndDestroy()
     {
-        _target = Vector2.zero;
         _isDead = true;
         _animator.SetBool(ANIM_BOOL_DEAD, true);
 
@@ -42,9 +41,10 @@ public class SkeletonController : MonoBehaviour
         Destroy(gameObject);
     }
 
-    void Awake()
+    void Start()
     {
-        _playerReference = FindAnyObjectByType<HeroEntity>();
+        _playerReference = PlayerSpawner.Instance.GetPlayer().GetComponent<HeroEntity>();
+        _follow = GetComponent<FollowGameObject>();
         _rb = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();
@@ -57,8 +57,18 @@ public class SkeletonController : MonoBehaviour
     // if close enough apply damage just once!
     void Update()
     {
-        if (!CanUpdate()) 
+        if (!CanUpdate())
         {
+            _playerReference = PlayerSpawner.Instance.GetPlayer().GetComponent<HeroEntity>();
+            if (_playerReference == null)
+            {
+                Debug.LogError("Can't find player reference");
+            }
+            else
+            {
+                _follow.SetTarget(_playerReference.gameObject);
+            }
+            
             return; 
         }
 
@@ -85,8 +95,6 @@ public class SkeletonController : MonoBehaviour
             _damagedPlayerThisFrame = true;
             _triedToAttackedPlayer = false;
         }
-
-        _target = (_playerReference.transform.position - transform.position).normalized;
     }
 
     void OnTriggerEnter2D(Collider2D collision)

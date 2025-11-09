@@ -13,6 +13,12 @@ public class FollowGameObject : MonoBehaviour
         _speed = speed;
     }
 
+    public bool CloseToTarget()
+    {
+        float distanceFromTarget = Vector3.Distance(_target.transform.position, this.transform.position);
+        return distanceFromTarget <= _distanceOffsetFromTarget;
+    }
+
     public void SetTarget(GameObject target)
     {
         _target = target;
@@ -31,8 +37,7 @@ public class FollowGameObject : MonoBehaviour
             return;
         }
 
-        float distanceFromTarget = Vector3.Distance(_target.transform.position, this.transform.position);
-        if (distanceFromTarget <= _distanceOffsetFromTarget)
+        if (CloseToTarget())
         {
             _rb.linearVelocity = Vector3.zero;
         }
