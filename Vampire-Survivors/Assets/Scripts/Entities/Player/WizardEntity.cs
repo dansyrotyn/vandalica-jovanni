@@ -1,72 +1,120 @@
-using Unity.VisualScripting;
+using System;
+using System.Collections;
+using System.Threading.Tasks;
+using UnityEditor.Animations;
+using UnityEditor.ShaderGraph;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class WizardEntity : EntityPlayer
 {
-    private Rigidbody2D _rigidbody;
-    private SpriteRenderer _spriteRenderer;
-    private Animator _animator;
-
-    [Header("Player Stats")]
-    [SerializeField] private int maxHealth = 3;
-    [SerializeField] private int currentHealth;
-    [SerializeField] private float speed = 5f;
-
-    private Vector2 _moveDirection;
+    [SerializeField] private GameObject _UIHeartGrid;
+    [SerializeField] private GameObject _heartPrefab;
+    [SerializeField] private Collider2D _leftHurtBox;
+    [SerializeField] private Collider2D _rightHurtBox;
+    
     private const string ANIM_TRIGGER_HURT = "Hurt";
+    private const string ANIM_TRIGGER_ATTACK = "Attack";
+    private const string ANIM_DEATH = "WizardDeathAnim";
+
+    [SerializeField] private float attackCooldownTime = 1.0f;
+    [SerializeField] private float attackCooldown = 0.0f;
+
+    void Start()
+    {
+        for (int i = 0; i < _maxHealth; i++)
+        {
+            Instantiate(_heartPrefab, _UIHeartGrid.transform);
+        }
+    }
 
     public override void Damage(int damage)
     {
-        currentHealth -= damage;
-        _animator.SetTrigger(ANIM_TRIGGER_HURT);
+        _health -= damage;
+        _visual.Animator.SetTrigger(ANIM_TRIGGER_HURT);
+        if (_UIHeartGrid.transform.childCount != 0)
+        {
+            Transform child = _UIHeartGrid.transform.GetChild(0);
+            Destroy(child.gameObject);
+        }
+
+        StartCoroutine(DamageEffect());
     }
 
-    private void HandleInput()
+    private IEnumerator DamageEffect()
     {
-        float inputX = Input.GetAxisRaw("Horizontal");
-        float inputY = Input.GetAxisRaw("Vertical");
-        _moveDirection = new Vector2(inputX, inputY).normalized;
-
-        if (Input.GetKeyDown(KeyCode.Escape) && !GameManager.Instance.IsPaused())
-        {
-            GameManager.Instance.PauseGame();
-        }
-        else if (Input.GetKeyDown(KeyCode.Escape) && GameManager.Instance.IsPaused())
-        {
-            GameManager.Instance.ResumeGame();
-        }
+        _visual.SpriteRenderer.color = Color.black;
+        yield return new WaitForSeconds(0.1f);
+        _visual.SpriteRenderer.color = Color.white;
     }
 
     private void HandleSpriteFlip()
     {
-        if (_moveDirection.x != 0)
+        if (_rb.linearVelocity.x != 0)
         {
-            _spriteRenderer.flipX = _moveDirection.x < 0;
+            _visual.SpriteRenderer.flipX = _rb.linearVelocity.x < 0;
         }
     }
 
-    private void Start()
+    void OnTriggerEnter2D(Collider2D collision)
     {
-        _rigidbody = GetComponent<Rigidbody2D>();
-        _spriteRenderer = GetComponent<SpriteRenderer>();
-        _animator = GetComponent<Animator>();
-
-        currentHealth = maxHealth;
+        EntityEnemy enemy = collision.GetComponent<EntityEnemy>();
+        if (enemy != null)
+        {
+            enemy.Damage(1);
+        }
     }
 
     private void Update()
     {
-        HandleInput();
+        if (_isDead) return;
+
         HandleSpriteFlip();
 
-        if (currentHealth <= 0)
+        if (attackCooldown == 0.0f)
         {
-            Destroy(gameObject);
+            _visual.Animator.SetTrigger(ANIM_TRIGGER_ATTACK);
+            attackCooldown = attackCooldownTime;
+        }
+        else
+        {
+            attackCooldown = Math.Max(attackCooldown - Time.deltaTime, 0.0f);
+        }
+
+        if (_health <= 0)
+        {
+            _isDead = true;
+            _visual.FadeOutDeathTask(ANIM_DEATH, false).ContinueWith(_ =>
+                {
+                    GameManager.Instance.PlayerList.Remove(this);
+                    Destroy(this.gameObject);
+                },
+
+                TaskScheduler.FromCurrentSynchronizationContext()
+            );
         }
     }
 
-    private void FixedUpdate()
+    private IEnumerator TriggerHurtBox(Collider2D box)
     {
-        _rigidbody.linearVelocity = _moveDirection * speed;
+        AnimatorStateInfo info = _visual.Animator.GetCurrentAnimatorStateInfo(0);
+        box.gameObject.SetActive(true);
+        Color color = _visual.SpriteRenderer.color;
+        _visual.SpriteRenderer.color = new Color(1, 1, 1, 1);
+        yield return new WaitForSeconds(info.length / 4.0f); // this is kind of arbitrary I should figure out something better...
+        _visual.SpriteRenderer.color = color;
+        box.gameObject.SetActive(false);
+    }
+
+    private void UnityAnimationEvent_Attack()
+    {
+        if (_visual.SpriteRenderer.flipX)
+        {
+            StartCoroutine(TriggerHurtBox(_leftHurtBox));
+        }
+        else
+        {
+            StartCoroutine(TriggerHurtBox(_rightHurtBox));
+        }
     }
 }
