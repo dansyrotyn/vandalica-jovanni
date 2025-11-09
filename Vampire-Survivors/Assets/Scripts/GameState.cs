@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.Tilemaps;
+using Unity.Cinemachine;
 
 public class GameState : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class GameState : MonoBehaviour
     [SerializeField] private TMP_Text _waveText;
     [SerializeField] private GameObject _pauseMenuPanel;
     [SerializeField] private Tilemap _groundTilemap;
+    [SerializeField] private CinemachineCamera _cinemachineCamera;
 
     private List<Vector3> _playableArea;
 
@@ -64,6 +66,10 @@ public class GameState : MonoBehaviour
                 }
             }
         }
+
+        GameObject player = PlayerSpawner.Instance.SpawnPlayer(false);
+        _cinemachineCamera.Follow = player.transform;
+        _cinemachineCamera.LookAt = player.transform;
     }
 
 

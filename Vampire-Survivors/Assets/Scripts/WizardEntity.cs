@@ -1,7 +1,7 @@
+using Unity.VisualScripting;
 using UnityEngine;
-using System.Collections.Generic;
 
-public class AIController : MonoBehaviour
+public class WizardEntity : MonoBehaviour
 {
     private Rigidbody2D _rigidbody;
     private SpriteRenderer _spriteRenderer;
@@ -21,6 +21,22 @@ public class AIController : MonoBehaviour
         _animator.SetTrigger(ANIM_TRIGGER_HURT);
     }
 
+    private void HandleInput()
+    {
+        float inputX = Input.GetAxisRaw("Horizontal");
+        float inputY = Input.GetAxisRaw("Vertical");
+        _moveDirection = new Vector2(inputX, inputY).normalized;
+
+        if (Input.GetKeyDown(KeyCode.Escape) && !GameState.Instance.IsPaused())
+        {
+            GameState.Instance.PauseGame();
+        }
+        else if (Input.GetKeyDown(KeyCode.Escape) && GameState.Instance.IsPaused())
+        {
+            GameState.Instance.ResumeGame();
+        }
+    }
+
     private void HandleSpriteFlip()
     {
         if (_moveDirection.x != 0)
@@ -38,14 +54,9 @@ public class AIController : MonoBehaviour
         currentHealth = maxHealth;
     }
 
-    void HandleMovement()
-    {
-        // GameState.Instance.GetPlayableArea()
-    }
-
     private void Update()
     {
-        HandleMovement();
+        HandleInput();
         HandleSpriteFlip();
 
         if (currentHealth <= 0)

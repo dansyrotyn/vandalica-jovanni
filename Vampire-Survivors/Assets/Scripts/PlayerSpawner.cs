@@ -1,51 +1,83 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerSpawner : MonoBehaviour
 {
-    public static GameState Instance { get; private set; }
+    public static PlayerSpawner Instance { get; private set; }
 
-    [SerializeField] private List<GameObject> _playerPrefabs;
+    [SerializeField] private List<GameObject> _players;
+
+    [SerializeField] private List<GameObject> _prefabs;
 
     private List<Transform> _spawnPoints;
     private int _spawnIndex;
 
-    // want to change bevavior to make it have ai behavior
-    public GameObject SpawnPlayer()
+    public GameObject GetPlayer()
+    {
+        return _players[0];
+    }
+
+    public GameObject SpawnPlayer(bool useAI)
     {
         GameObject prefab = PickRandomPlayerPrefab();
         Transform spawnPoint = PickRandomSpawnPoint();
 
-        GameObject entity = Instantiate(prefab, spawnPoint.position, Quaternion.identity);
-        // entity.Initalize(behavior);
+        GameObject obj = Instantiate(prefab, spawnPoint.position, Quaternion.identity);
+        if (useAI)
+        {
+            obj.AddComponent<AIController>();
+        }
+        else
+        {
+            obj.AddComponent<PlayerController>();
+        }
 
-        return entity;
+        _players.Add(obj);
+
+        return obj;
     }
 
     private GameObject PickRandomPlayerPrefab()
     {
-        int index = UnityEngine.Random.Range(0, _playerPrefabs.Count);
-        return _playerPrefabs[index];
+        int index = UnityEngine.Random.Range(0, _prefabs.Count);
+        return _prefabs[index];
     }
 
     private Transform PickRandomSpawnPoint()
     {
+        if (_spawnIndex >= _spawnPoints.Count)
+        {
+            Debug.LogError("PickRandomSpawnPoint() Index out of bounds! Returning null.");
+            return null;
+        }
+
         return _spawnPoints[_spawnIndex++];
     }
 
-    void Start()
+    private void Awake()
     {
-        _spawnPoints = new List<Transform>();
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
 
+        _spawnPoints = new List<Transform>();
         foreach (Transform child in this.transform)
         {
             _spawnPoints.Add(child);
         }
+
+        _prefabs = Resources.LoadAll<GameObject>("Prefab/Hero").ToList();
     }
 
-    void Update()
+    void Start()
     {
-        
+
     }
 }

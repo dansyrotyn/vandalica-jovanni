@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 7289916420862949719}
   - component: {fileID: 925196045170055489}
   - component: {fileID: 76521058939818504}
-  - component: {fileID: -5849494924231947622}
   - component: {fileID: 7479939696346206742}
   - component: {fileID: 375276042542226918}
-  m_Layer: 0
+  - component: {fileID: 4311686958633665632}
+  m_Layer: 3
   m_Name: PlayerKnight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117,21 +117,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &-5849494924231947622
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1908577308967311437}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1494896348e5243e0a0519d1dd09e398, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  maxHealth: 3
-  health: 0
-  speed: 5
 --- !u!50 &7479939696346206742
 Rigidbody2D:
   serializedVersion: 5
@@ -205,6 +190,21 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.13963516, y: 0.11999999}
   m_EdgeRadius: 0
+--- !u!114 &4311686958633665632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1908577308967311437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0babde286dad4ada9c746021f46dda0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HeroEntity
+  _health: 0
+  _maxHealth: 3
+  _isDead: 0
 --- !u!1 &6328859784305977576
 GameObject:
   m_ObjectHideFlags: 0
@@ -355,5 +355,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 156b786ab9da14b7b8abbd02121cfc73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FireballController
-  speed: 4
-  radius: 0.25
+  _speed: 4
+  _radius: 0.2

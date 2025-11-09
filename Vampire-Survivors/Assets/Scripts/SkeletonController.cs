@@ -4,12 +4,11 @@ using UnityEngine;
 public class SkeletonController : MonoBehaviour
 {
     private Rigidbody2D _rb;
-    private PlayerController _playerReference;
+    private HeroEntity _playerReference;
     private SpriteRenderer _spriteRenderer;
     private Animator _animator;
 
     [SerializeField] private float _attackRadius = 1f;
-    [SerializeField] private float _speed = 2f;
 
     private bool _isDead = false;
     private bool _damagedPlayerThisFrame = false;
@@ -19,11 +18,6 @@ public class SkeletonController : MonoBehaviour
     private const string ANIM_BOOL_DEAD = "Dead";
     private const string ANIM_TRIGGER_ATTACK_1 = "Attack1";
     private const string ANIM_ATTACK_1 = "SkeletonAttack1";
-    
-    public void AddSpeed(float speed)
-    {
-        _speed += speed;
-    }
 
     private bool CanUpdate() => _playerReference && !_isDead;
 
@@ -50,7 +44,7 @@ public class SkeletonController : MonoBehaviour
 
     void Awake()
     {
-        _playerReference = FindAnyObjectByType<PlayerController>();
+        _playerReference = FindAnyObjectByType<HeroEntity>();
         _rb = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();
@@ -76,13 +70,11 @@ public class SkeletonController : MonoBehaviour
         bool isCloseEnoughToAttackPlayer = distanceToPlayer <= _attackRadius;
         if (!isAttacking && !_triedToAttackedPlayer && isCloseEnoughToAttackPlayer)
         {
-            _speed = 0f;
             _animator.SetTrigger(ANIM_TRIGGER_ATTACK_1);
             _triedToAttackedPlayer = true;
         }
         else if (!isAttacking)
         {
-            _speed = 2f;
             _damagedPlayerThisFrame = false;
         }
 
@@ -109,18 +101,5 @@ public class SkeletonController : MonoBehaviour
         {
             StartCoroutine(FadeOutAndDestroy());
         }
-    }
-
-    void FixedUpdate()
-    {
-        if (!CanUpdate())
-        {
-            _target = Vector2.zero;
-            _speed = 0f;
-            _rb.linearVelocity = Vector2.zero;
-            return; 
-        }
-
-        _rb.linearVelocity = _target * _speed;
     }
 }

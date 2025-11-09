@@ -18,10 +18,22 @@ public class EnemyWaveSpawner : MonoBehaviour
     private int _waveNumber = 0;
     private float _blueGreenColor = 1.0f;
     private float _additionalAnimationSpeed = 0.1f;
-    private float _additionalMovementSpeed = 0.1f;
+    private float _movementSpeed = 1f;
 
     public int GetWaveNumber() =>  _waveNumber;
     public bool IsOnCooldown() => _spawnCurrnetCooldownTime > 0.0f;
+
+    // expensive don't do this every frame!
+    public List<GameObject> GetEnemies()
+    {
+        List<GameObject> enemies = new List<GameObject>();
+        foreach (Transform child in this.transform)
+        {
+            enemies.Add(child.gameObject);
+        }
+
+        return enemies;
+    }
 
     void SpawnOnGroundLayer()
     {
@@ -34,12 +46,14 @@ public class EnemyWaveSpawner : MonoBehaviour
             SkeletonController skeleton = skeletonObject.GetComponent<SkeletonController>();
             SpriteRenderer skeletonRenderer = skeleton.GetComponent<SpriteRenderer>();
             Animator skeletonAnim = skeleton.GetComponent<Animator>();
+            FollowGameObject follow = skeleton.GetComponent<FollowGameObject>();
             Color skeletonColor = skeletonRenderer.color;
             skeletonColor.r = 1.0f;
             skeletonColor.g = _blueGreenColor;
             skeletonColor.b = _blueGreenColor;
 
-            skeleton.AddSpeed(_additionalMovementSpeed);
+            follow.SetSpeed(_movementSpeed);
+            follow.SetTarget(PlayerSpawner.Instance.GetPlayer());
             skeletonAnim.speed += _additionalAnimationSpeed;
             skeletonRenderer.color = skeletonColor;
         }
@@ -53,7 +67,7 @@ public class EnemyWaveSpawner : MonoBehaviour
         _waveNumber += 1;
         _spawnCount += 10;
         _additionalAnimationSpeed *= 1.1f;
-        _additionalMovementSpeed *= 1.1f;
+        _movementSpeed *= 1.1f;
         _blueGreenColor = Math.Max(_blueGreenColor - 0.1f, 0f);
 
         _spawnCurrnetCooldownTime = _spawnCooldownTime;
