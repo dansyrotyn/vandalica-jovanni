@@ -44,7 +44,7 @@ public class WizardEntity : EntityPlayer
     private IEnumerator DamageEffect()
     {
         _visual.SpriteRenderer.color = Color.black;
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.05f);
         _visual.SpriteRenderer.color = Color.white;
     }
 

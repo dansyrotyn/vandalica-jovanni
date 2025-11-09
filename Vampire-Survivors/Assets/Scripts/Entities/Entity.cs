@@ -21,3 +21,7 @@ public abstract class Entity : MonoBehaviour, IDamagable
         _health = _maxHealth;
     }
 }
+
+// This class really only exists for type safety
+public abstract class EntityPlayer : Entity { }
+public abstract class EntityEnemy : Entity{}
