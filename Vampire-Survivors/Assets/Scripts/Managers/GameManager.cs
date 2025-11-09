@@ -3,12 +3,16 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.Tilemaps;
 using Unity.Cinemachine;
+using UnityEngine.Events;
+using System;
 
-public class GameState : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
-    public static GameState Instance { get; private set; }
+    public static GameManager Instance { get; private set; }
     private float _monotonicTimer;
     private bool _isPaused = false;
+
+    public UnityEvent EventControllablePlayerIsDead;
 
     [Header("UI Refs")]
     [SerializeField] private TMP_Text _timeText;
@@ -17,15 +21,13 @@ public class GameState : MonoBehaviour
     [SerializeField] private Tilemap _groundTilemap;
     [SerializeField] private CinemachineCamera _cinemachineCamera;
 
-    [SerializeField] private List<Vector3> _playableArea;
+    // NOTE(Jovanni):
+    // Using a linked list here for enemy list because there are lots of insertions and delations
+    public List<EntityPlayer> PlayerList { get; set; }
+    public LinkedList<EntityEnemy> EnemyList { get; set; }
 
-    // TODO(Jovanni):
-    // PlayerEntity
-    // EnemyEntity
-    public List<GameObject> PlayerList { get; set; }
-
-    // Using a linked list here for enemy list because there are lotso insertions and delations
-    public LinkedList<GameObject> EnemyList { get; set; }
+    private Entity _controllablePlayer;
+    private List<Vector3> _playableArea;
 
     public bool IsPaused() => _isPaused;
     public List<Vector3> GetPlayableArea() => _playableArea;
@@ -55,8 +57,8 @@ public class GameState : MonoBehaviour
             Instance = this;
         }
 
-        PlayerList = new List<GameObject>();
-        EnemyList = new LinkedList<GameObject>();
+        PlayerList = new List<EntityPlayer>();
+        EnemyList = new LinkedList<EntityEnemy>();
     }
 
     private void Start()
@@ -79,9 +81,9 @@ public class GameState : MonoBehaviour
             }
         }
 
-        GameObject player = PlayerSpawner.Instance.SpawnPlayer(false);
-        _cinemachineCamera.Follow = player.transform;
-        _cinemachineCamera.LookAt = player.transform;
+        _controllablePlayer = PlayerSpawner.Instance.SpawnPlayer(false).GetComponent<EntityPlayer>();
+        _cinemachineCamera.Follow = _controllablePlayer.transform;
+        _cinemachineCamera.LookAt = _controllablePlayer.transform;
 
         PlayerSpawner.Instance.SpawnPlayer(true);
         PlayerSpawner.Instance.SpawnPlayer(true);
@@ -103,15 +105,21 @@ public class GameState : MonoBehaviour
         // TODO(Jovanni):
         // Ensure correctness
         // for example does adding a component call awake?
+        if (_controllablePlayer.IsDead())
+        {
+            EventControllablePlayerIsDead?.Invoke();
+        }
+        
         if (_cinemachineCamera.Follow == null)
         {
-            GameObject entityToFollow = PlayerList[Random.Range(0, PlayerList.Count)];
+            EntityPlayer entityToFollow = PlayerList[UnityEngine.Random.Range(0, PlayerList.Count)];
             FollowPositionTarget follow = GetComponent<FollowPositionTarget>();
             AIController controller = GetComponent<AIController>();
             Destroy(follow);
             Destroy(controller);
 
-            entityToFollow.AddComponent<PlayerController>();
+            entityToFollow.gameObject.AddComponent<PlayerController>();
+            _controllablePlayer = entityToFollow.GetComponent<EntityPlayer>();
             _cinemachineCamera.Follow = entityToFollow.transform;
             _cinemachineCamera.LookAt = entityToFollow.transform;
         }

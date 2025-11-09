@@ -28,8 +28,7 @@ public class PlayerSpawner : MonoBehaviour
             obj.AddComponent<PlayerController>();
         }
 
-        GameState.Instance.PlayerList.Add(obj);
-
+        GameManager.Instance.PlayerList.Add(obj.GetComponent<EntityPlayer>());
         return obj;
     }
 

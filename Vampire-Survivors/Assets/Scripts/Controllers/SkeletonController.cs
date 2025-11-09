@@ -1,53 +1,29 @@
 using System;
 using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 
-public class SkeletonController : MonoBehaviour
+public class SkeletonController : EntityEnemy
 {
-    private Rigidbody2D _rb;
-    private HeroEntity _playerReference;
-    private SpriteRenderer _spriteRenderer;
-    private Animator _animator;
+    private EntityPlayer _playerReference;
     private FollowGameObject _follow;
 
     [SerializeField] private float _attackRadius = 1f;
-
-    private bool _isDead = false;
     private bool _damagedPlayerThisFrame = false;
     private bool _triedToAttackedPlayer = false;
 
-    private const string ANIM_BOOL_DEAD = "Dead";
     private const string ANIM_TRIGGER_ATTACK_1 = "Attack1";
+
     private const string ANIM_ATTACK_1 = "SkeletonAttack1";
+     private const string ANIM_DEATH = "SkeletonDeathAnim";
 
     private bool CanUpdate() => (_playerReference != null) && !_isDead;
 
-    private IEnumerator FadeOutAndDestroy()
-    {
-        _isDead = true;
-        _animator.SetBool(ANIM_BOOL_DEAD, true);
-
-        AnimatorStateInfo animInfo = _animator.GetCurrentAnimatorStateInfo(0);
-        const int steps = 100;
-        float stepTime = animInfo.length / steps;
-        Color color = _spriteRenderer.color;
-
-        for (int i = 0; i < steps; i++)
-        {
-            color.a = 1f - (i / (float)steps);
-            _spriteRenderer.color = color;
-            yield return new WaitForSeconds(stepTime);
-        }
-
-        GameState.Instance.EnemyList.Remove(gameObject);
-        Destroy(gameObject);
-    }
-
-    private HeroEntity GetClosestPlayer()
+    private EntityPlayer GetClosestPlayer()
     {
         float minimumDistance = float.MaxValue;
-        GameObject closestPlayer = null;
-        foreach (GameObject player in GameState.Instance.PlayerList)
+        EntityPlayer closestPlayer = null;
+        foreach (EntityPlayer player in GameManager.Instance.PlayerList)
         {
             float dist = Vector3.Distance(this.transform.position, player.transform.position);
             if (dist < minimumDistance)
@@ -59,7 +35,7 @@ public class SkeletonController : MonoBehaviour
 
         if (closestPlayer != null)
         {
-            return closestPlayer.GetComponent<HeroEntity>();
+            return closestPlayer.GetComponent<EntityPlayer>();
         }
 
         return null;
@@ -68,37 +44,34 @@ public class SkeletonController : MonoBehaviour
     private void Start()
     {
         _follow = GetComponent<FollowGameObject>();
-        _rb = GetComponent<Rigidbody2D>();
-        _spriteRenderer = GetComponent<SpriteRenderer>();
-        _animator = GetComponent<Animator>();
     }
-
-
 
     // I would like this simplify this attack logic
     // basically I want to say:
     // play attack animation 
     // _isAttacking = true 
     // if close enough apply damage just once!
+
+    // Make this animation events!
     void Update()
     {
         // NOTE(Jovanni): probably horrible for perforance but I will fix this.
         _playerReference = GetClosestPlayer();
         if (!CanUpdate())
         {
-            return; 
+            return;
         }
 
         _follow.SetTarget(_playerReference.gameObject);
-        _spriteRenderer.flipX = _playerReference.transform.position.x < transform.position.x;
-        AnimatorStateInfo animInfo = _animator.GetCurrentAnimatorStateInfo(0);
+        _visual.FaceTarget(_playerReference.transform);
+        AnimatorStateInfo animInfo = _visual.Animator.GetCurrentAnimatorStateInfo(0);
 
         bool isAttacking = animInfo.IsName(ANIM_ATTACK_1);
         float distanceToPlayer = Vector2.Distance(_playerReference.transform.position, transform.position);
         bool isCloseEnoughToAttackPlayer = distanceToPlayer <= _attackRadius;
         if (!isAttacking && !_triedToAttackedPlayer && isCloseEnoughToAttackPlayer)
         {
-            _animator.SetTrigger(ANIM_TRIGGER_ATTACK_1);
+            _visual.Animator.SetTrigger(ANIM_TRIGGER_ATTACK_1);
             _triedToAttackedPlayer = true;
         }
         else if (!isAttacking)
@@ -114,6 +87,8 @@ public class SkeletonController : MonoBehaviour
             _triedToAttackedPlayer = false;
         }
     }
+    
+    public override void Damage(int dmg) {}
 
     void OnTriggerEnter2D(Collider2D collision)
     {
@@ -125,7 +100,15 @@ public class SkeletonController : MonoBehaviour
         FireballController fireball = collision.GetComponent<FireballController>();
         if (fireball != null)
         {
-            StartCoroutine(FadeOutAndDestroy());
+            _isDead = true;
+            _visual.FadeOutDeathTask(ANIM_DEATH, true).ContinueWith(_ => 
+                {
+                    GameManager.Instance.EnemyList.Remove(this);
+                    Destroy(this.gameObject);
+                }, 
+
+                TaskScheduler.FromCurrentSynchronizationContext()
+            );
         }
     }
 }

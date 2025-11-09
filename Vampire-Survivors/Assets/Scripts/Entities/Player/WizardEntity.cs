@@ -1,7 +1,7 @@
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class WizardEntity : MonoBehaviour
+public class WizardEntity : EntityPlayer
 {
     private Rigidbody2D _rigidbody;
     private SpriteRenderer _spriteRenderer;
@@ -15,7 +15,7 @@ public class WizardEntity : MonoBehaviour
     [SerializeField] private int currentHealth;
     [SerializeField] private float speed = 5f;
 
-    public void ApplyDamage(int damage)
+    public override void Damage(int damage)
     {
         currentHealth -= damage;
         _animator.SetTrigger(ANIM_TRIGGER_HURT);
@@ -27,13 +27,13 @@ public class WizardEntity : MonoBehaviour
         float inputY = Input.GetAxisRaw("Vertical");
         _moveDirection = new Vector2(inputX, inputY).normalized;
 
-        if (Input.GetKeyDown(KeyCode.Escape) && !GameState.Instance.IsPaused())
+        if (Input.GetKeyDown(KeyCode.Escape) && !GameManager.Instance.IsPaused())
         {
-            GameState.Instance.PauseGame();
+            GameManager.Instance.PauseGame();
         }
-        else if (Input.GetKeyDown(KeyCode.Escape) && GameState.Instance.IsPaused())
+        else if (Input.GetKeyDown(KeyCode.Escape) && GameManager.Instance.IsPaused())
         {
-            GameState.Instance.ResumeGame();
+            GameManager.Instance.ResumeGame();
         }
     }
 

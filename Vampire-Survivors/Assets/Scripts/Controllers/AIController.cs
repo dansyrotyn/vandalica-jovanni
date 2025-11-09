@@ -15,7 +15,7 @@ public class AIController : MonoBehaviour
 
     private Vector3 GetNewRandomTargetPosition()
     {
-        List<Vector3> area = GameState.Instance.GetPlayableArea();
+        List<Vector3> area = GameManager.Instance.GetPlayableArea();
         int index = Random.Range(0, area.Count);
         
         return area[index];

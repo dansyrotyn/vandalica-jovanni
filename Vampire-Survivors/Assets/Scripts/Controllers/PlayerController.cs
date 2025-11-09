@@ -8,7 +8,13 @@ public class PlayerController : MonoBehaviour
     [Header("Movement Stats")]
     [SerializeField] private float _speed = 5f;
 
+    [SerializeField] private bool shouldFreezePlayerController = false;
     private Vector3 _moveDirection;
+
+    void FreezePlayerController()
+    {
+        shouldFreezePlayerController = true;
+    }
 
     private void HandleInput()
     {
@@ -16,28 +22,37 @@ public class PlayerController : MonoBehaviour
         float inputY = Input.GetAxisRaw("Vertical");
         _moveDirection = new Vector2(inputX, inputY).normalized;
 
-        if (Input.GetKeyDown(KeyCode.Escape) && !GameState.Instance.IsPaused())
+        if (Input.GetKeyDown(KeyCode.Escape) && !GameManager.Instance.IsPaused())
         {
-            GameState.Instance.PauseGame();
+            GameManager.Instance.PauseGame();
         }
-        else if (Input.GetKeyDown(KeyCode.Escape) && GameState.Instance.IsPaused())
+        else if (Input.GetKeyDown(KeyCode.Escape) && GameManager.Instance.IsPaused())
         {
-            GameState.Instance.ResumeGame();
+            GameManager.Instance.ResumeGame();
         }
     }
 
     private void Start()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
+        GameManager.Instance.EventControllablePlayerIsDead.AddListener(FreezePlayerController);
     }
 
     private void Update()
     {
+        if (shouldFreezePlayerController) return;
+
         HandleInput();
     }
 
     private void FixedUpdate()
     {
+        if (shouldFreezePlayerController)
+        {
+            _rigidbody.linearVelocity = Vector3.zero;
+            return;
+        }
+
         _rigidbody.linearVelocity = _moveDirection * _speed;
     }
 }

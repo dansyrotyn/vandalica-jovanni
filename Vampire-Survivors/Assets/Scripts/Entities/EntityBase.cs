@@ -1,21 +1,22 @@
 using UnityEngine;
+using UnityEngine.VFX;
 
-public class Entity : MonoBehaviour
+public abstract class Entity : MonoBehaviour, IDamagable
 {
     protected Rigidbody2D _rb;
-    protected SpriteRenderer _spriteRenderer;
-    protected Animator _animator;
- 
+    protected EntityVisualHanlder _visual;
+
     [SerializeField] protected int _health;
     [SerializeField] protected int _maxHealth;
     [SerializeField] protected bool _isDead;
 
+    public abstract void Damage(int dmg);
+    public bool IsDead() => _isDead;
+
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
-        _spriteRenderer = GetComponent<SpriteRenderer>();
-        _animator = GetComponent<Animator>();
-
+        _visual = GetComponent<EntityVisualHanlder>();
         _health = _maxHealth;
     }
 }

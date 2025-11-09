@@ -37,7 +37,7 @@ public class EnemyWaveSpawner : MonoBehaviour
 
     void SpawnOnGroundLayer()
     {
-        List<Vector3> playableArea = GameState.Instance.GetPlayableArea();
+        List<Vector3> playableArea = GameManager.Instance.GetPlayableArea();
 
         for (int i = 0; i < _spawnCount; i++)
         {
