@@ -8,6 +8,15 @@ public class FireballController : MonoBehaviour
     [SerializeField] private float _speed = 4.0f;
     [SerializeField] private float _radius = 0.20f;
 
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        EntityEnemy enemy = collision.GetComponent<EntityEnemy>();
+        if (enemy != null)
+        {
+            enemy.Damage(1);
+        }
+    }
+
     void Update()
     {
         _angle += _speed * Time.deltaTime;

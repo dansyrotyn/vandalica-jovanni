@@ -5,10 +5,9 @@ public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D _rigidbody;
 
-    [Header("Movement Stats")]
     [SerializeField] private float _speed = 5f;
-
     [SerializeField] private bool shouldFreezePlayerController = false;
+
     private Vector3 _moveDirection;
 
     void FreezePlayerController()

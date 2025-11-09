@@ -11,11 +11,11 @@ GameObject:
   - component: {fileID: 3581249605875409047}
   - component: {fileID: 4530313596208706395}
   - component: {fileID: 2811260201814078637}
-  - component: {fileID: 3295129039473657282}
   - component: {fileID: 1859549417758210129}
   - component: {fileID: 2576328221623420152}
   - component: {fileID: 5729286325588990472}
   - component: {fileID: 1013116379044959774}
+  - component: {fileID: 884555094444823638}
   m_Layer: 0
   m_Name: Skeleton
   m_TagString: Untagged
@@ -118,19 +118,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &3295129039473657282
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7093695742421028849}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8713cc5e92454e0fb2facca2065af21, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SkeletonController
-  _attackRadius: 0.5
 --- !u!50 &1859549417758210129
 Rigidbody2D:
   serializedVersion: 5
@@ -231,3 +218,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c98fba53e68448c6bee3f53ed885d6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EntityVisualHanlder
+--- !u!114 &884555094444823638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7093695742421028849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71ff23cd415da4f34a6306fa1481a69e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkeletonEntity
+  _health: 0
+  _maxHealth: 1
+  _isDead: 0
+  _attackRadius: 0.5

@@ -5,7 +5,6 @@ public class HeroEntity : EntityPlayer
 {
     private const string ANIM_TRIGGER_HURT = "Hurt";
     private const string ANIM_BOOL_DEAD = "Dead";
-
     private const string ANIM_DEATH = "KnightDeathAnim";
 
     public override void Damage(int damage)
@@ -29,7 +28,6 @@ public class HeroEntity : EntityPlayer
         HandleSpriteFlip();
         if (_health <= 0)
         {
-            // could play like a death animation here
             _isDead = true;
             _visual.FadeOutDeathTask(ANIM_DEATH, false).ContinueWith(_ => 
                 {

@@ -42,11 +42,10 @@ public class EnemyWaveSpawner : MonoBehaviour
         for (int i = 0; i < _spawnCount; i++)
         {
             Vector3 worldPos = playableArea[Random.Range(0, playableArea.Count)];
-            GameObject skeletonObject = Instantiate(_entityPrefab, worldPos, Quaternion.identity, transform);
-            SkeletonController skeleton = skeletonObject.GetComponent<SkeletonController>();
-            SpriteRenderer skeletonRenderer = skeleton.GetComponent<SpriteRenderer>();
-            Animator skeletonAnim = skeleton.GetComponent<Animator>();
-            FollowGameObject follow = skeleton.GetComponent<FollowGameObject>();
+            EntityEnemy enemy = Instantiate(_entityPrefab, worldPos, Quaternion.identity, transform).GetComponent<EntityEnemy>();
+            SpriteRenderer skeletonRenderer = enemy.gameObject.GetComponent<SpriteRenderer>();
+            Animator skeletonAnim = enemy.gameObject.GetComponent<Animator>();
+            FollowGameObject follow = enemy.gameObject.GetComponent<FollowGameObject>();
             Color skeletonColor = skeletonRenderer.color;
             skeletonColor.r = 1.0f;
             skeletonColor.g = _blueGreenColor;

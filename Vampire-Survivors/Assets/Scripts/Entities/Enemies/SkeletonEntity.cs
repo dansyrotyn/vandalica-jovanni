@@ -1,22 +1,23 @@
-using System;
-using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class SkeletonController : EntityEnemy
+public class SkeletonEntity : EntityEnemy
 {
     private EntityPlayer _playerReference;
     private FollowGameObject _follow;
 
+    [Header("Skeleton Info")]
     [SerializeField] private float _attackRadius = 1f;
+    
     private bool _attackingPlayer = false;
-
     private const string ANIM_TRIGGER_ATTACK_1 = "Attack1";
-
     private const string ANIM_ATTACK_1 = "SkeletonAttack1";
-     private const string ANIM_DEATH = "SkeletonDeathAnim";
+    private const string ANIM_DEATH = "SkeletonDeathAnim";
 
-    private bool CanUpdate() => (_playerReference != null) && !_isDead;
+    public override void Damage(int damage)
+    {
+        _health -= damage;
+    }
 
     private EntityPlayer GetClosestPlayer()
     {
@@ -40,29 +41,17 @@ public class SkeletonController : EntityEnemy
         return null;
     }
 
-    private void AttackPlayer()
-    {
-        float distanceToPlayer = Vector2.Distance(_playerReference.transform.position, transform.position);
-        if (distanceToPlayer <= _attackRadius)
-        {
-            _playerReference.Damage(1);
-        }
-    }
-
-    private void EndAttackAnimation()
-    {
-        _attackingPlayer = false;
-    }
-
     private void Start()
     {
         _follow = GetComponent<FollowGameObject>();
     }
 
-    void Update()
+    private void Update()
     {
+        if (_isDead) return;
+
         _playerReference = GetClosestPlayer();
-        if (!CanUpdate())
+        if (_playerReference == null)
         {
             return;
         }
@@ -77,29 +66,32 @@ public class SkeletonController : EntityEnemy
             _attackingPlayer = true;
             _visual.Animator.SetTrigger(ANIM_TRIGGER_ATTACK_1);
         }
-    }
-    
-    public override void Damage(int dmg) {}
 
-    void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (!CanUpdate())
-        {
-            return;
-        }
-        
-        FireballController fireball = collision.GetComponent<FireballController>();
-        if (fireball != null)
+        if (_health <= 0)
         {
             _isDead = true;
-            _visual.FadeOutDeathTask(ANIM_DEATH, true).ContinueWith(_ => 
+            _visual.FadeOutDeathTask(ANIM_DEATH, true).ContinueWith(_ =>
                 {
                     GameManager.Instance.EnemyList.Remove(this);
                     Destroy(this.gameObject);
-                }, 
+                },
 
                 TaskScheduler.FromCurrentSynchronizationContext()
             );
         }
+    }
+    
+    private void UnityAnimationEvent_TryAttackPlayer()
+    {
+        float distanceToPlayer = Vector2.Distance(_playerReference.transform.position, transform.position);
+        if (distanceToPlayer <= _attackRadius)
+        {
+            _playerReference.Damage(1);
+        }
+    }
+
+    private void UnityAnimationEvent_EndAttackAnimation()
+    {
+        _attackingPlayer = false;
     }
 }

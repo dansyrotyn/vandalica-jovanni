@@ -6,6 +6,7 @@ public abstract class Entity : MonoBehaviour, IDamagable
     protected Rigidbody2D _rb;
     protected EntityVisualHanlder _visual;
 
+    [Header("Entity Info")]
     [SerializeField] protected int _health;
     [SerializeField] protected int _maxHealth;
     [SerializeField] protected bool _isDead;
