@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -38,17 +39,41 @@ public class SkeletonController : MonoBehaviour
             yield return new WaitForSeconds(stepTime);
         }
 
+        GameState.Instance.EnemyList.Remove(gameObject);
         Destroy(gameObject);
+    }
+
+    private HeroEntity GetClosestPlayer()
+    {
+        float minimumDistance = float.MaxValue;
+        GameObject closestPlayer = null;
+        foreach (GameObject player in GameState.Instance.PlayerList)
+        {
+            float dist = Vector3.Distance(this.transform.position, player.transform.position);
+            if (dist < minimumDistance)
+            {
+                closestPlayer = player;
+                minimumDistance = dist;
+            }
+        }
+
+        if (closestPlayer != null)
+        {
+            return closestPlayer.GetComponent<HeroEntity>();
+        }
+
+        return null;
     }
 
     void Start()
     {
-        _playerReference = PlayerSpawner.Instance.GetPlayer().GetComponent<HeroEntity>();
         _follow = GetComponent<FollowGameObject>();
         _rb = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();
     }
+
+
 
     // I would like this simplify this attack logic
     // basically I want to say:
@@ -57,21 +82,14 @@ public class SkeletonController : MonoBehaviour
     // if close enough apply damage just once!
     void Update()
     {
+        // NOTE(Jovanni): probably horrible for perforance but I will fix this.
+        _playerReference = GetClosestPlayer();
         if (!CanUpdate())
         {
-            _playerReference = PlayerSpawner.Instance.GetPlayer().GetComponent<HeroEntity>();
-            if (_playerReference == null)
-            {
-                Debug.LogError("Can't find player reference");
-            }
-            else
-            {
-                _follow.SetTarget(_playerReference.gameObject);
-            }
-            
             return; 
         }
 
+        _follow.SetTarget(_playerReference.gameObject);
         _spriteRenderer.flipX = _playerReference.transform.position.x < transform.position.x;
         AnimatorStateInfo animInfo = _animator.GetCurrentAnimatorStateInfo(0);
 
@@ -91,7 +109,7 @@ public class SkeletonController : MonoBehaviour
         bool shouldDamagePlayer = (animInfo.normalizedTime >= 0.5f) && (distanceToPlayer <= _attackRadius * 1.1f);
         if (isAttacking && !_damagedPlayerThisFrame && shouldDamagePlayer)
         {
-            _playerReference.ApplyDamage(1);
+            _playerReference.Damage(1);
             _damagedPlayerThisFrame = true;
             _triedToAttackedPlayer = false;
         }

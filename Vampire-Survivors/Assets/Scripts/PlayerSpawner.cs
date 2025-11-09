@@ -6,26 +6,10 @@ using UnityEngine;
 public class PlayerSpawner : MonoBehaviour
 {
     public static PlayerSpawner Instance { get; private set; }
-
-    [SerializeField] private List<GameObject> _players;
     [SerializeField] private List<GameObject> _prefabs;
 
     private List<Transform> _spawnPoints;
     private int _spawnIndex;
-
-    public GameObject GetPlayer()
-    {
-        foreach (GameObject player in _players)
-        {
-            if (player != null)
-            {
-                return player;
-            }
-        }
-
-        Debug.LogError("This should not really be possible...");
-        return null;
-    }
 
     public GameObject SpawnPlayer(bool useAI)
     {
@@ -44,7 +28,7 @@ public class PlayerSpawner : MonoBehaviour
             obj.AddComponent<PlayerController>();
         }
 
-        _players.Add(obj);
+        GameState.Instance.PlayerList.Add(obj);
 
         return obj;
     }
@@ -84,10 +68,5 @@ public class PlayerSpawner : MonoBehaviour
         }
 
         _prefabs = Resources.LoadAll<GameObject>("Prefab/Hero").ToList();
-    }
-
-    void Start()
-    {
-
     }
 }

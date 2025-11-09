@@ -53,7 +53,6 @@ public class EnemyWaveSpawner : MonoBehaviour
             skeletonColor.b = _blueGreenColor;
 
             follow.SetSpeed(_movementSpeed);
-            follow.SetTarget(PlayerSpawner.Instance.GetPlayer());
             skeletonAnim.speed += _additionalAnimationSpeed;
             skeletonRenderer.color = skeletonColor;
         }

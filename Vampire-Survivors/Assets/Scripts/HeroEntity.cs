@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public class HeroEntity : Entity
+public class HeroEntity : Entity, IDamagable
 {
     private const string ANIM_TRIGGER_HURT = "Hurt";
 
-    public void ApplyDamage(int damage)
+    public void Damage(int damage)
     {
         _health -= damage;
         _animator.SetTrigger(ANIM_TRIGGER_HURT);
@@ -24,6 +24,7 @@ public class HeroEntity : Entity
 
         if (_health <= 0)
         {
+            GameState.Instance.PlayerList.Remove(gameObject);
             Destroy(gameObject);
         }
     }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Entity : MonoBehaviour, IDamagable
+public class Entity : MonoBehaviour
 {
     protected Rigidbody2D _rb;
     protected SpriteRenderer _spriteRenderer;
@@ -17,10 +17,5 @@ public class Entity : MonoBehaviour, IDamagable
         _animator = GetComponent<Animator>();
 
         _health = _maxHealth;
-    }
-
-    public void Damage(int dmg)
-    {
-        _health -= dmg;
     }
 }

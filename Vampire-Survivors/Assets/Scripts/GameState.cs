@@ -19,20 +19,28 @@ public class GameState : MonoBehaviour
 
     [SerializeField] private List<Vector3> _playableArea;
 
+    // TODO(Jovanni):
+    // PlayerEntity
+    // EnemyEntity
+    public List<GameObject> PlayerList { get; set; }
+
+    // Using a linked list here for enemy list because there are lotso insertions and delations
+    public LinkedList<GameObject> EnemyList { get; set; }
+
     public bool IsPaused() => _isPaused;
     public List<Vector3> GetPlayableArea() => _playableArea;
 
     public void ResumeGame()
     {
         _pauseMenuPanel.SetActive(false);
-        Time.timeScale = 1f; // Resumes time
+        Time.timeScale = 1f;
         _isPaused = false;
     }
 
     public void PauseGame()
     {
         _pauseMenuPanel.SetActive(true);
-        Time.timeScale = 0f; // Pauses time
+        Time.timeScale = 0f;
         _isPaused = true;
     }
 
@@ -46,6 +54,9 @@ public class GameState : MonoBehaviour
         {
             Instance = this;
         }
+
+        PlayerList = new List<GameObject>();
+        EnemyList = new LinkedList<GameObject>();
     }
 
     private void Start()
@@ -72,12 +83,35 @@ public class GameState : MonoBehaviour
         _cinemachineCamera.Follow = player.transform;
         _cinemachineCamera.LookAt = player.transform;
 
-        GameObject ai = PlayerSpawner.Instance.SpawnPlayer(true);
+        PlayerSpawner.Instance.SpawnPlayer(true);
+        PlayerSpawner.Instance.SpawnPlayer(true);
+        PlayerSpawner.Instance.SpawnPlayer(true);
+        PlayerSpawner.Instance.SpawnPlayer(true);
+        PlayerSpawner.Instance.SpawnPlayer(true);
     }
 
     void Update()
     {
         _monotonicTimer += Time.deltaTime;
+
+        if (PlayerList.Count == 0)
+        {
+            Time.timeScale = 0.0f;
+            return;
+        }
+
+        if (_cinemachineCamera.Follow == null)
+        {
+            GameObject entityToFollow = PlayerList[Random.Range(0, PlayerList.Count)];
+            FollowPositionTarget follow = GetComponent<FollowPositionTarget>();
+            AIController controller = GetComponent<AIController>();
+            Destroy(follow);
+            Destroy(controller);
+
+            entityToFollow.AddComponent<PlayerController>();
+            _cinemachineCamera.Follow = entityToFollow.transform;
+            _cinemachineCamera.LookAt = entityToFollow.transform;
+        }
 
         // Note(Jovanni):
         // This is probably not great for performance 
