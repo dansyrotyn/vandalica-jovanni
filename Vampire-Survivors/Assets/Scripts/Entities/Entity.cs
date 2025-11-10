@@ -40,7 +40,7 @@ public abstract class EntityPlayer : Entity
     {
         PlayerScoreInfo info = new PlayerScoreInfo();
         info.type = _type;
-        info.texture = _sprite.texture;
+        info.spirte = _sprite;
         info.killCount = EnemyKillCount;
         info.timeSurvived = GameManager.Instance.GetMonotonicTime();
         GameManager.Instance.PlayerScores.Add(info);

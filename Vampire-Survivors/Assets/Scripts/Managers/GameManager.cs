@@ -10,7 +10,7 @@ using System;
 public struct PlayerScoreInfo
 {
     public EntityPlayerType type;
-    public Texture2D texture;
+    public Sprite spirte;
     public int killCount;
     public float timeSurvived;
 }
@@ -119,9 +119,11 @@ public class GameManager : MonoBehaviour
             {
                 
                 GameObject scoreCard = Instantiate(_playerScoreInfoPrefab, _finalScoreUI.transform);
-                // ScoreCardInfo info = scoreCard.GetComponent<ScoreCardInfo>();
-                // info.image.texture = 
-                
+                ScoreCardInfo uiInfo = scoreCard.GetComponent<ScoreCardInfo>();
+                uiInfo.image.sprite = info.spirte;
+                uiInfo.nameText.text = "Name: " + info.type.ToString();
+                uiInfo.killedText.text = "Killed: " + info.killCount;
+                uiInfo.timeText.text = "Time Survived: " + info.timeSurvived.ToString("0.00");
             }
 
             _showingFinalScoreInfo = true;

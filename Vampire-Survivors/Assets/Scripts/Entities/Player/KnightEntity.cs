@@ -18,6 +18,8 @@ public class KnightEntity : EntityPlayer
         {
             Instantiate(_heartPrefab, _UIHeartGrid.transform);
         }
+
+        _type = EntityPlayerType.KNIGHT;
     }
 
     public override void Damage(int damage)

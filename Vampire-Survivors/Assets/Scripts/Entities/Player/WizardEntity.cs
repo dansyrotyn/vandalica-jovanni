@@ -26,6 +26,8 @@ public class WizardEntity : EntityPlayer
         {
             Instantiate(_heartPrefab, _UIHeartGrid.transform);
         }
+
+        _type = EntityPlayerType.WIZARD;
     }
 
     public override void Damage(int damage)
@@ -62,6 +64,7 @@ public class WizardEntity : EntityPlayer
         if (enemy != null)
         {
             enemy.Damage(1);
+            EnemyKillCount += 1;
         }
     }
 
