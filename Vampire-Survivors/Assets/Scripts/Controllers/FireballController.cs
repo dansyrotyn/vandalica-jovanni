@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.UIElements;
 
 public class FireballController : MonoBehaviour
@@ -14,6 +15,16 @@ public class FireballController : MonoBehaviour
         if (enemy != null)
         {
             enemy.Damage(1);
+
+            Transform parent = this.gameObject.transform.parent;
+            EntityPlayer player = parent.gameObject.GetComponent<EntityPlayer>();
+            player.EnemyKillCount += 1;
+
+
+            // NOTE(Jovanni):
+            // because I know that this will kill anything I can just say
+            // that if you damage someone you also killed them
+            // but later this would have to be more robust.
         }
     }
 

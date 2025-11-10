@@ -309,6 +309,7 @@ MonoBehaviour:
   _health: 0
   _maxHealth: 3
   _isDead: 0
+  _sprite: {fileID: 815424164945274260, guid: b99de874d47f14697a312dc82277ab31, type: 3}
   _UIHeartGrid: {fileID: 6943935390467531922}
   _heartPrefab: {fileID: 190570262761969646, guid: fe52bc1c4144244178ace887debaa0c9, type: 3}
 --- !u!114 &840104688141165573

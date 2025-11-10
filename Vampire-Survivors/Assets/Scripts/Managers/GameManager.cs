@@ -6,11 +6,21 @@ using Unity.Cinemachine;
 using UnityEngine.Events;
 using System;
 
+// then there could be like a formula you could derive from this data
+public struct PlayerScoreInfo
+{
+    public EntityPlayerType type;
+    public Texture2D texture;
+    public int killCount;
+    public float timeSurvived;
+}
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
     private float _monotonicTimer;
     private bool _isPaused = false;
+    private bool _showingFinalScoreInfo = false;
 
     public UnityEvent EventControllablePlayerIsDead;
 
@@ -20,17 +30,23 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject _pauseMenuPanel;
     [SerializeField] private Tilemap _groundTilemap;
     [SerializeField] private CinemachineCamera _cinemachineCamera;
+    [SerializeField] private GameObject _playerScoreInfoPrefab;
+    [SerializeField] private GameObject _finalScoreUI;
 
     // NOTE(Jovanni):
     // Using a linked list here for enemy list because there are lots of insertions and delations
     public List<EntityPlayer> PlayerList { get; set; }
     public LinkedList<EntityEnemy> EnemyList { get; set; }
 
+    public List<PlayerScoreInfo> PlayerScores { get; set; }
+
     private Entity _controllablePlayer;
     private List<Vector3> _playableArea;
+  
 
     public bool IsPaused() => _isPaused;
     public List<Vector3> GetPlayableArea() => _playableArea;
+    public float GetMonotonicTime() => _monotonicTimer;
 
     public void ResumeGame()
     {
@@ -57,6 +73,7 @@ public class GameManager : MonoBehaviour
             Instance = this;
         }
 
+        PlayerScores  = new List<PlayerScoreInfo>();
         PlayerList = new List<EntityPlayer>();
         EnemyList = new LinkedList<EntityEnemy>();
     }
@@ -94,13 +111,28 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        _monotonicTimer += Time.deltaTime;
-
+        if (_showingFinalScoreInfo) return;
         if (PlayerList.Count == 0)
         {
+            _finalScoreUI.SetActive(true);
+            foreach (PlayerScoreInfo info in PlayerScores)
+            {
+                
+                GameObject scoreCard = Instantiate(_playerScoreInfoPrefab, _finalScoreUI.transform);
+                // ScoreCardInfo info = scoreCard.GetComponent<ScoreCardInfo>();
+                // info.image.texture = 
+                
+            }
+
+            _showingFinalScoreInfo = true;
             Time.timeScale = 0.0f;
             return;
         }
+
+        _monotonicTimer += Time.deltaTime;
+
+
+
 
         // TODO(Jovanni):
         // Ensure correctness
@@ -109,7 +141,7 @@ public class GameManager : MonoBehaviour
         {
             EventControllablePlayerIsDead?.Invoke();
         }
-        
+
         if (_cinemachineCamera.Follow == null)
         {
             EntityPlayer entityToFollow = PlayerList[UnityEngine.Random.Range(0, PlayerList.Count)];

@@ -22,6 +22,37 @@ public abstract class Entity : MonoBehaviour, IDamagable
     }
 }
 
-// This class really only exists for type safety
-public abstract class EntityPlayer : Entity { }
-public abstract class EntityEnemy : Entity{}
+public enum EntityPlayerType
+{
+    KNIGHT,
+    WIZARD
+}
+
+public abstract class EntityPlayer : Entity
+{
+    [Header("Player Entity Info")]
+    [SerializeField] private Sprite _sprite;
+
+    public int EnemyKillCount { set; get; }
+    protected EntityPlayerType _type;
+
+    void OnDestroy()
+    {
+        PlayerScoreInfo info = new PlayerScoreInfo();
+        info.type = _type;
+        info.texture = _sprite.texture;
+        info.killCount = EnemyKillCount;
+        info.timeSurvived = GameManager.Instance.GetMonotonicTime();
+        GameManager.Instance.PlayerScores.Add(info);
+    }
+}
+
+public enum EntityEnemyType
+{
+    SKELETON,
+}
+
+public abstract class EntityEnemy : Entity
+{
+    public EntityEnemyType type;
+}

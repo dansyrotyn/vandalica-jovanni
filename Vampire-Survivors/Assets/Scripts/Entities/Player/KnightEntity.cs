@@ -2,8 +2,9 @@ using System.Threading.Tasks;
 using UnityEditor.Animations;
 using UnityEngine;
 
-public class HeroEntity : EntityPlayer
+public class KnightEntity : EntityPlayer
 {
+    [Header("Knight Entity Info")]
     [SerializeField] private GameObject _UIHeartGrid;
     [SerializeField] private GameObject _heartPrefab;
     
