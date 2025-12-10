@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 579f4a509fd2f994fa391c0c78ea3f11, type: 3}
+  m_Name: EnemyWaveSpawner
+  m_EditorClassIdentifier: Coherence.Toolkit::Coherence.Toolkit.CoherenceSyncConfig
+  id: ddd7bc34091ff604784caf302fe6c3ee
+  selfId: 93f5e0ed7a501264f82854f0618e047e
+  editorTarget: {fileID: 6918201949006385847, guid: ddd7bc34091ff604784caf302fe6c3ee, type: 3}
+  includeInSchema: 1
+  objectProvider:
+    rid: 5571819390568235905
+  objectInstantiator:
+    rid: 5571819390568235906
+  references:
+    version: 2
+    RefIds:
+    - rid: 5571819390568235905
+      type: {class: DirectReferenceProvider, ns: Coherence.Toolkit, asm: Coherence.Toolkit}
+      data:
+        prefab: {fileID: 6918201949006385847, guid: ddd7bc34091ff604784caf302fe6c3ee, type: 3}
+    - rid: 5571819390568235906
+      type: {class: DefaultInstantiator, ns: Coherence.Toolkit, asm: Coherence.Toolkit}
+      data: 

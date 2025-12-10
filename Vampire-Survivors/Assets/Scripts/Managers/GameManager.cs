@@ -173,13 +173,26 @@ public class GameManager : MonoBehaviour
         // This is probably not great for performance 
         // because you are doing allocations of some kind every frame.
         _timeText.text = "Time: " + _monotonicTimer.ToString("0.00");
-
-        if (!EnemyWaveSpawner.Instance.IsOnCooldown())
+        if (EnemyWaveSpawner.Instance.IsLocal)
         {
-            EnemyWaveSpawner.Instance.SpawnNextWave();
-            _waveText.text = "Wave: " + EnemyWaveSpawner.Instance.GetWaveNumber();
+            if (!EnemyWaveSpawner.Instance.IsOnCooldown())
+            {
+                EnemyWaveSpawner.Instance.SpawnNextWave();
+                _waveText.text = "Wave: " + EnemyWaveSpawner.Instance.GetWaveNumber();
+            }
         }
+        else
+        {
+            if(lastWave != EnemyWaveSpawner.Instance.GetWaveNumber())
+            {
+                _waveText.text = "Wave: " + EnemyWaveSpawner.Instance.GetWaveNumber();
+            }
+            lastWave = EnemyWaveSpawner.Instance.GetWaveNumber();
+        }
+
     }
+
+    int lastWave = 0;
 
     internal void RegisterEntity(Entity entity)
     {

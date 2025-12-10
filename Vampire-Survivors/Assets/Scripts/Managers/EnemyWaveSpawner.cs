@@ -1,3 +1,4 @@
+using Coherence.Toolkit;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,12 +16,16 @@ public class EnemyWaveSpawner : MonoBehaviour
     [SerializeField] private float _spawnCooldownTime = 5.0f;
     [SerializeField] private float _spawnCurrnetCooldownTime = 0.0f;
 
-    private int _waveNumber = 0;
+    public int WaveNumber { get; set; } = 0;
+
+    protected CoherenceSync networkSync;
+    public bool IsLocal => networkSync && networkSync.HasStateAuthority;
+
     private float _blueGreenColor = 1.0f;
     private float _additionalAnimationSpeed = 0.1f;
     private float _movementSpeed = 1f;
 
-    public int GetWaveNumber() =>  _waveNumber;
+    public int GetWaveNumber() =>  WaveNumber;
     public bool IsOnCooldown() => _spawnCurrnetCooldownTime > 0.0f;
 
     // expensive don't do this every frame!
@@ -62,7 +67,7 @@ public class EnemyWaveSpawner : MonoBehaviour
         if (IsOnCooldown()) return;
 
         SpawnOnGroundLayer();
-        _waveNumber += 1;
+        WaveNumber += 1;
         _spawnCount += 10;
         _additionalAnimationSpeed *= 1.1f;
         _movementSpeed *= 1.1f;
@@ -79,13 +84,17 @@ public class EnemyWaveSpawner : MonoBehaviour
         } 
         else 
         { 
-            Instance = this; 
-        } 
+            Instance = this;
+            networkSync = GetComponent<CoherenceSync>();
+        }
     }
     
 
     void Update()
     {
-        _spawnCurrnetCooldownTime = (float)Math.Max(_spawnCurrnetCooldownTime - Time.deltaTime, 0.0f);
+        if( IsLocal)
+        {
+            _spawnCurrnetCooldownTime = (float)Math.Max(_spawnCurrnetCooldownTime - Time.deltaTime, 0.0f);
+        }
     }
 }
