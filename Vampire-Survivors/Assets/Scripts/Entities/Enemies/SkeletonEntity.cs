@@ -41,8 +41,9 @@ public class SkeletonEntity : EntityEnemy
         return null;
     }
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         _follow = GetComponent<FollowGameObject>();
     }
 

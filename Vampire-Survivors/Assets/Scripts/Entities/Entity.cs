@@ -7,7 +7,7 @@ public abstract class Entity : MonoBehaviour, IDamagable
     protected EntityVisualHandler _visual;
 
     [Header("Entity Info")]
-    [SerializeField] protected int _health;
+    protected int _health {get; set; }
     [SerializeField] protected int _maxHealth;
     [SerializeField] protected bool _isDead;
 
@@ -19,6 +19,11 @@ public abstract class Entity : MonoBehaviour, IDamagable
         _rb = GetComponent<Rigidbody2D>();
         _visual = GetComponent<EntityVisualHandler>();
         _health = _maxHealth;
+    }
+
+    protected virtual void Start()
+    {
+        GameManager.Instance.RegisterEntity(this);
     }
 }
 
