@@ -30,15 +30,18 @@ public class WizardEntity : EntityPlayer
 
     public override void Damage(int damage)
     {
-        _health -= damage;
-        _visual.Animator.SetTrigger(ANIM_TRIGGER_HURT);
-        if (_UIHeartGrid.transform.childCount != 0)
+        if (IsLocal)
         {
-            Transform child = _UIHeartGrid.transform.GetChild(0);
-            Destroy(child.gameObject);
-        }
+            Health -= damage;
+            _visual.Animator.SetTrigger(ANIM_TRIGGER_HURT);
+            if (_UIHeartGrid.transform.childCount != 0)
+            {
+                Transform child = _UIHeartGrid.transform.GetChild(0);
+                Destroy(child.gameObject);
+            }
 
-        StartCoroutine(DamageEffect());
+            StartCoroutine(DamageEffect());
+        }
     }
 
     private IEnumerator DamageEffect()
@@ -82,7 +85,7 @@ public class WizardEntity : EntityPlayer
             attackCooldown = Math.Max(attackCooldown - Time.deltaTime, 0.0f);
         }
 
-        if (_health <= 0)
+        if (Health <= 0)
         {
             _isDead = true;
             _visual.FadeOutDeathTask(ANIM_DEATH, false).ContinueWith(_ =>

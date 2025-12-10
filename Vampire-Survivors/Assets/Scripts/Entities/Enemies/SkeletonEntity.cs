@@ -16,7 +16,10 @@ public class SkeletonEntity : EntityEnemy
 
     public override void Damage(int damage)
     {
-        _health -= damage;
+        if (IsLocal)
+        {
+            Health -= damage;
+        }
     }
 
     private EntityPlayer GetClosestPlayer()
@@ -68,7 +71,7 @@ public class SkeletonEntity : EntityEnemy
             _visual.Animator.SetTrigger(ANIM_TRIGGER_ATTACK_1);
         }
 
-        if (_health <= 0)
+        if (Health <= 0)
         {
             _isDead = true;
             _visual.FadeOutDeathTask(ANIM_DEATH, true).ContinueWith(_ =>

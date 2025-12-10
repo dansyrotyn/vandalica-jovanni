@@ -1,3 +1,4 @@
+using Coherence.Toolkit;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.VFX;
@@ -8,10 +9,12 @@ public abstract class Entity : MonoBehaviour, IDamagable
     protected EntityVisualHandler _visual;
 
     [Header("Entity Info")]
-    protected int _health {get; set; }
     [SerializeField] protected int _maxHealth;
     [SerializeField] protected bool _isDead;
 
+    protected CoherenceSync networkSync;
+    public int Health { get; set; }
+    public bool IsLocal => networkSync && networkSync.HasStateAuthority;
     public abstract void Damage(int dmg);
     public bool IsDead() => _isDead;
 
@@ -19,7 +22,8 @@ public abstract class Entity : MonoBehaviour, IDamagable
     {
         _rb = GetComponent<Rigidbody2D>();
         _visual = GetComponent<EntityVisualHandler>();
-        _health = _maxHealth;
+        Health = _maxHealth;
+        networkSync = GetComponent<CoherenceSync>();
     }
 
     protected virtual void Start()

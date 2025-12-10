@@ -3308,6 +3308,155 @@ namespace Coherence.Generated
                     $"Stopped: { System.Convert.ToString(StoppedMask, 2).PadLeft(1, '0') })";
             }
         }
+        public struct _ed055072323381b4892d02449d957183_4311686958633665632 : ICoherenceComponentData
+        {
+            public void ResetFrame(AbsoluteSimulationFrame frame)
+            {
+                FieldsMask |= _ed055072323381b4892d02449d957183_4311686958633665632.HealthMask;
+                HealthSimulationFrame = frame;
+            }
+    
+            public static uint HealthMask => 0b00000000000000000000000000000001;
+            public AbsoluteSimulationFrame HealthSimulationFrame;
+            public System.Int32 Health;
+    
+            public uint FieldsMask { get; set; }
+            public uint StoppedMask { get; set; }
+            public uint GetComponentType() => 21;
+            public int PriorityLevel() => 100;
+            public const int order = 0;
+            public uint InitialFieldsMask() => 0b00000000000000000000000000000001;
+            public bool HasFields() => true;
+            public bool HasRefFields() => false;
+    
+    
+            public long[] GetSimulationFrames() {
+                return null;
+            }
+    
+            public int GetFieldCount() => 1;
+    
+    
+            
+            public HashSet<Entity> GetEntityRefs()
+            {
+                return default;
+            }
+    
+            public uint ReplaceReferences(Entity fromEntity, Entity toEntity)
+            {
+                return 0;
+            }
+            
+            public IEntityMapper.Error MapToAbsolute(IEntityMapper mapper)
+            {
+                return IEntityMapper.Error.None;
+            }
+    
+            public IEntityMapper.Error MapToRelative(IEntityMapper mapper)
+            {
+                return IEntityMapper.Error.None;
+            }
+    
+            public ICoherenceComponentData Clone() => this;
+            public int GetComponentOrder() => order;
+            public bool IsSendOrdered() => false;
+            public bool IsWorldPositionComponent() => false;
+    
+            private static readonly System.Int32 _Health_Min = -2147483648;
+            private static readonly System.Int32 _Health_Max = 2147483647;
+    
+            public AbsoluteSimulationFrame? GetMinSimulationFrame()
+            {
+                AbsoluteSimulationFrame? min = null;
+    
+    
+                return min;
+            }
+    
+            public ICoherenceComponentData MergeWith(ICoherenceComponentData data)
+            {
+                var other = (_ed055072323381b4892d02449d957183_4311686958633665632)data;
+                var otherMask = other.FieldsMask;
+    
+                FieldsMask |= otherMask;
+                StoppedMask &= ~(otherMask);
+    
+                if ((otherMask & 0x01) != 0)
+                {
+                    this.HealthSimulationFrame = other.HealthSimulationFrame;
+                    this.Health = other.Health;
+                }
+    
+                otherMask >>= 1;
+                StoppedMask |= other.StoppedMask;
+    
+                return this;
+            }
+    
+            public uint DiffWith(ICoherenceComponentData data)
+            {
+                throw new System.NotSupportedException($"{nameof(DiffWith)} is not supported in Unity");
+            }
+    
+            public static uint Serialize(_ed055072323381b4892d02449d957183_4311686958633665632 data, bool isRefSimFrameValid, AbsoluteSimulationFrame referenceSimulationFrame, IOutProtocolBitStream bitStream, Logger logger)
+            {
+                if (bitStream.WriteMask(data.StoppedMask != 0))
+                {
+                    bitStream.WriteMaskBits(data.StoppedMask, 1);
+                }
+    
+                var mask = data.FieldsMask;
+    
+                if (bitStream.WriteMask((mask & 0x01) != 0))
+                {
+    
+                    Coherence.Utils.Bounds.Check(data.Health, _Health_Min, _Health_Max, "_ed055072323381b4892d02449d957183_4311686958633665632.Health", logger);
+    
+                    data.Health = Coherence.Utils.Bounds.Clamp(data.Health, _Health_Min, _Health_Max);
+    
+                    var fieldValue = data.Health;
+    
+
+    
+                    bitStream.WriteIntegerRange(fieldValue, 32, -2147483648);
+                }
+    
+                mask >>= 1;
+    
+                return mask;
+            }
+    
+            public static _ed055072323381b4892d02449d957183_4311686958633665632 Deserialize(AbsoluteSimulationFrame referenceSimulationFrame, InProtocolBitStream bitStream)
+            {
+                var stoppedMask = (uint)0;
+                if (bitStream.ReadMask())
+                {
+                    stoppedMask = bitStream.ReadMaskBits(1);
+                }
+    
+                var val = new _ed055072323381b4892d02449d957183_4311686958633665632();
+                if (bitStream.ReadMask())
+                {
+    
+                    val.Health = bitStream.ReadIntegerRange(32, -2147483648);
+                    val.FieldsMask |= _ed055072323381b4892d02449d957183_4311686958633665632.HealthMask;
+                }
+    
+                val.StoppedMask = stoppedMask;
+    
+                return val;
+            }
+    
+    
+            public override string ToString()
+            {
+                return $"_ed055072323381b4892d02449d957183_4311686958633665632(" +
+                    $" Health: { this.Health }" +
+                    $" Mask: { System.Convert.ToString(FieldsMask, 2).PadLeft(1, '0') }, " +
+                    $"Stopped: { System.Convert.ToString(StoppedMask, 2).PadLeft(1, '0') })";
+            }
+        }
         public struct _ed055072323381b4892d02449d957183_76521058939818504 : ICoherenceComponentData
         {
             public void ResetFrame(AbsoluteSimulationFrame frame)
@@ -3327,7 +3476,7 @@ namespace Coherence.Generated
     
             public uint FieldsMask { get; set; }
             public uint StoppedMask { get; set; }
-            public uint GetComponentType() => 21;
+            public uint GetComponentType() => 22;
             public int PriorityLevel() => 100;
             public const int order = 0;
             public uint InitialFieldsMask() => 0b00000000000000000000000000000011;
@@ -3481,6 +3630,155 @@ namespace Coherence.Generated
                     $" enabled: { this.enabled }" +
                     $" Mask: { System.Convert.ToString(FieldsMask, 2).PadLeft(2, '0') }, " +
                     $"Stopped: { System.Convert.ToString(StoppedMask, 2).PadLeft(2, '0') })";
+            }
+        }
+        public struct _fdd8092855022054e9c339b99ce2323a_884555094444823638 : ICoherenceComponentData
+        {
+            public void ResetFrame(AbsoluteSimulationFrame frame)
+            {
+                FieldsMask |= _fdd8092855022054e9c339b99ce2323a_884555094444823638.HealthMask;
+                HealthSimulationFrame = frame;
+            }
+    
+            public static uint HealthMask => 0b00000000000000000000000000000001;
+            public AbsoluteSimulationFrame HealthSimulationFrame;
+            public System.Int32 Health;
+    
+            public uint FieldsMask { get; set; }
+            public uint StoppedMask { get; set; }
+            public uint GetComponentType() => 23;
+            public int PriorityLevel() => 100;
+            public const int order = 0;
+            public uint InitialFieldsMask() => 0b00000000000000000000000000000001;
+            public bool HasFields() => true;
+            public bool HasRefFields() => false;
+    
+    
+            public long[] GetSimulationFrames() {
+                return null;
+            }
+    
+            public int GetFieldCount() => 1;
+    
+    
+            
+            public HashSet<Entity> GetEntityRefs()
+            {
+                return default;
+            }
+    
+            public uint ReplaceReferences(Entity fromEntity, Entity toEntity)
+            {
+                return 0;
+            }
+            
+            public IEntityMapper.Error MapToAbsolute(IEntityMapper mapper)
+            {
+                return IEntityMapper.Error.None;
+            }
+    
+            public IEntityMapper.Error MapToRelative(IEntityMapper mapper)
+            {
+                return IEntityMapper.Error.None;
+            }
+    
+            public ICoherenceComponentData Clone() => this;
+            public int GetComponentOrder() => order;
+            public bool IsSendOrdered() => false;
+            public bool IsWorldPositionComponent() => false;
+    
+            private static readonly System.Int32 _Health_Min = -2147483648;
+            private static readonly System.Int32 _Health_Max = 2147483647;
+    
+            public AbsoluteSimulationFrame? GetMinSimulationFrame()
+            {
+                AbsoluteSimulationFrame? min = null;
+    
+    
+                return min;
+            }
+    
+            public ICoherenceComponentData MergeWith(ICoherenceComponentData data)
+            {
+                var other = (_fdd8092855022054e9c339b99ce2323a_884555094444823638)data;
+                var otherMask = other.FieldsMask;
+    
+                FieldsMask |= otherMask;
+                StoppedMask &= ~(otherMask);
+    
+                if ((otherMask & 0x01) != 0)
+                {
+                    this.HealthSimulationFrame = other.HealthSimulationFrame;
+                    this.Health = other.Health;
+                }
+    
+                otherMask >>= 1;
+                StoppedMask |= other.StoppedMask;
+    
+                return this;
+            }
+    
+            public uint DiffWith(ICoherenceComponentData data)
+            {
+                throw new System.NotSupportedException($"{nameof(DiffWith)} is not supported in Unity");
+            }
+    
+            public static uint Serialize(_fdd8092855022054e9c339b99ce2323a_884555094444823638 data, bool isRefSimFrameValid, AbsoluteSimulationFrame referenceSimulationFrame, IOutProtocolBitStream bitStream, Logger logger)
+            {
+                if (bitStream.WriteMask(data.StoppedMask != 0))
+                {
+                    bitStream.WriteMaskBits(data.StoppedMask, 1);
+                }
+    
+                var mask = data.FieldsMask;
+    
+                if (bitStream.WriteMask((mask & 0x01) != 0))
+                {
+    
+                    Coherence.Utils.Bounds.Check(data.Health, _Health_Min, _Health_Max, "_fdd8092855022054e9c339b99ce2323a_884555094444823638.Health", logger);
+    
+                    data.Health = Coherence.Utils.Bounds.Clamp(data.Health, _Health_Min, _Health_Max);
+    
+                    var fieldValue = data.Health;
+    
+
+    
+                    bitStream.WriteIntegerRange(fieldValue, 32, -2147483648);
+                }
+    
+                mask >>= 1;
+    
+                return mask;
+            }
+    
+            public static _fdd8092855022054e9c339b99ce2323a_884555094444823638 Deserialize(AbsoluteSimulationFrame referenceSimulationFrame, InProtocolBitStream bitStream)
+            {
+                var stoppedMask = (uint)0;
+                if (bitStream.ReadMask())
+                {
+                    stoppedMask = bitStream.ReadMaskBits(1);
+                }
+    
+                var val = new _fdd8092855022054e9c339b99ce2323a_884555094444823638();
+                if (bitStream.ReadMask())
+                {
+    
+                    val.Health = bitStream.ReadIntegerRange(32, -2147483648);
+                    val.FieldsMask |= _fdd8092855022054e9c339b99ce2323a_884555094444823638.HealthMask;
+                }
+    
+                val.StoppedMask = stoppedMask;
+    
+                return val;
+            }
+    
+    
+            public override string ToString()
+            {
+                return $"_fdd8092855022054e9c339b99ce2323a_884555094444823638(" +
+                    $" Health: { this.Health }" +
+                    $" Mask: { System.Convert.ToString(FieldsMask, 2).PadLeft(1, '0') }, " +
+                    $"Stopped: { System.Convert.ToString(StoppedMask, 2).PadLeft(1, '0') })";
             }
         }
 
