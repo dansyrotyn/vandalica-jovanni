@@ -73,7 +73,6 @@ public class SkeletonEntity : EntityEnemy
             _isDead = true;
             _visual.FadeOutDeathTask(ANIM_DEATH, true).ContinueWith(_ =>
                 {
-                    GameManager.Instance.EnemyList.Remove(this);
                     Destroy(this.gameObject);
                 },
 

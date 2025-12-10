@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -25,6 +26,12 @@ public abstract class Entity : MonoBehaviour, IDamagable
     {
         GameManager.Instance.RegisterEntity(this);
     }
+
+    protected virtual void OnDestroy()
+    {
+        GameManager.Instance.UnregisterEntity(this);
+
+    }
 }
 
 public enum EntityPlayerType
@@ -41,8 +48,9 @@ public abstract class EntityPlayer : Entity
     public int EnemyKillCount { set; get; }
     protected EntityPlayerType _type;
 
-    void OnDestroy()
+    protected override void OnDestroy()
     {
+        base.OnDestroy();
         PlayerScoreInfo info = new PlayerScoreInfo();
         info.type = _type;
         info.spirte = _sprite;

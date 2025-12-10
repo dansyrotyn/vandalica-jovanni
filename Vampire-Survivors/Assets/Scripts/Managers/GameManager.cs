@@ -192,4 +192,16 @@ public class GameManager : MonoBehaviour
             EnemyList.AddLast(enemy);
         }
     }
+
+    internal void UnregisterEntity(Entity entity)
+    {
+        if (entity is EntityPlayer player)
+        {
+            PlayerList.Remove(player);
+        }
+        else if (entity is EntityEnemy enemy)
+        {
+            EnemyList.Remove(enemy);
+        }
+    }
 }
