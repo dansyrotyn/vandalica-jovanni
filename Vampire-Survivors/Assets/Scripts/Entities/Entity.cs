@@ -1,3 +1,5 @@
+using Coherence.Toolkit;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -7,10 +9,12 @@ public abstract class Entity : MonoBehaviour, IDamagable
     protected EntityVisualHandler _visual;
 
     [Header("Entity Info")]
-    [SerializeField] protected int _health;
     [SerializeField] protected int _maxHealth;
     [SerializeField] protected bool _isDead;
 
+    protected CoherenceSync networkSync;
+    public int Health { get; set; }
+    public bool IsLocal => networkSync && networkSync.HasStateAuthority;
     public abstract void Damage(int dmg);
     public bool IsDead() => _isDead;
 
@@ -18,7 +22,19 @@ public abstract class Entity : MonoBehaviour, IDamagable
     {
         _rb = GetComponent<Rigidbody2D>();
         _visual = GetComponent<EntityVisualHandler>();
-        _health = _maxHealth;
+        Health = _maxHealth;
+        networkSync = GetComponent<CoherenceSync>();
+    }
+
+    protected virtual void Start()
+    {
+        GameManager.Instance.RegisterEntity(this);
+    }
+
+    protected virtual void OnDestroy()
+    {
+        GameManager.Instance.UnregisterEntity(this);
+
     }
 }
 
@@ -36,8 +52,9 @@ public abstract class EntityPlayer : Entity
     public int EnemyKillCount { set; get; }
     protected EntityPlayerType _type;
 
-    void OnDestroy()
+    protected override void OnDestroy()
     {
+        base.OnDestroy();
         PlayerScoreInfo info = new PlayerScoreInfo();
         info.type = _type;
         info.spirte = _sprite;

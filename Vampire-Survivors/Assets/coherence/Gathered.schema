@@ -1,0 +1,26 @@
+component _61220bb384d51473e92f31c6e84de929_4311686958633665632 [id "18"]
+  enabled Bool [bits "1"]
+
+component _61220bb384d51473e92f31c6e84de929_76521058939818504 [id "19"]
+  Dead Bool [bits "1"]
+  enabled Bool [bits "1"]
+
+component _61220bb384d51473e92f31c6e84de929_840104688141165573 [id "20"]
+  enabled Bool [bits "1"]
+
+component _ddd7bc34091ff604784caf302fe6c3ee_2611792902500378772 [id "21"]
+  WaveNumber Int [bits "32", range-min "-2147483648", range-max "2147483647"]
+
+component _ed055072323381b4892d02449d957183_4311686958633665632 [id "22"]
+  Health Int [bits "32", range-min "-2147483648", range-max "2147483647"]
+
+component _ed055072323381b4892d02449d957183_76521058939818504 [id "23"]
+  Dead Bool [bits "1"]
+  enabled Bool [bits "1"]
+
+component _fdd8092855022054e9c339b99ce2323a_884555094444823638 [id "24"]
+  Health Int [bits "32", range-min "-2147483648", range-max "2147483647"]
+
+command _714b9f8fd47e343158014373676f77d0_97320cdaa6f641c98d6f57d68520c0e5 [id "6", routing "All"]
+  spawnPosition Vector3 [compression "None"]
+

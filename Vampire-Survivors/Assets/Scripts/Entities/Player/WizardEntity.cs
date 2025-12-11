@@ -1,10 +1,7 @@
 using System;
 using System.Collections;
 using System.Threading.Tasks;
-using UnityEditor.Animations;
-using UnityEditor.ShaderGraph;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class WizardEntity : EntityPlayer
 {
@@ -12,7 +9,7 @@ public class WizardEntity : EntityPlayer
     [SerializeField] private GameObject _heartPrefab;
     [SerializeField] private Collider2D _leftHurtBox;
     [SerializeField] private Collider2D _rightHurtBox;
-    
+
     private const string ANIM_TRIGGER_HURT = "Hurt";
     private const string ANIM_TRIGGER_ATTACK = "Attack";
     private const string ANIM_DEATH = "WizardDeathAnim";
@@ -20,8 +17,9 @@ public class WizardEntity : EntityPlayer
     [SerializeField] private float attackCooldownTime = 1.0f;
     [SerializeField] private float attackCooldown = 0.0f;
 
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         for (int i = 0; i < _maxHealth; i++)
         {
             Instantiate(_heartPrefab, _UIHeartGrid.transform);
@@ -32,15 +30,18 @@ public class WizardEntity : EntityPlayer
 
     public override void Damage(int damage)
     {
-        _health -= damage;
-        _visual.Animator.SetTrigger(ANIM_TRIGGER_HURT);
-        if (_UIHeartGrid.transform.childCount != 0)
+        if (IsLocal)
         {
-            Transform child = _UIHeartGrid.transform.GetChild(0);
-            Destroy(child.gameObject);
-        }
+            Health -= damage;
+            _visual.Animator.SetTrigger(ANIM_TRIGGER_HURT);
+            if (_UIHeartGrid.transform.childCount != 0)
+            {
+                Transform child = _UIHeartGrid.transform.GetChild(0);
+                Destroy(child.gameObject);
+            }
 
-        StartCoroutine(DamageEffect());
+            StartCoroutine(DamageEffect());
+        }
     }
 
     private IEnumerator DamageEffect()
@@ -84,7 +85,7 @@ public class WizardEntity : EntityPlayer
             attackCooldown = Math.Max(attackCooldown - Time.deltaTime, 0.0f);
         }
 
-        if (_health <= 0)
+        if (Health <= 0)
         {
             _isDead = true;
             _visual.FadeOutDeathTask(ANIM_DEATH, false).ContinueWith(_ =>
