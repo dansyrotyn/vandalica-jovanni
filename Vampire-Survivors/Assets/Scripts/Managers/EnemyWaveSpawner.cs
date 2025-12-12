@@ -68,9 +68,9 @@ public class EnemyWaveSpawner : MonoBehaviour
 
         SpawnOnGroundLayer();
         WaveNumber += 1;
-        //_spawnCount += 10;
-        //_additionalAnimationSpeed *= 1.1f;
-        //_movementSpeed *= 1.1f;
+        _spawnCount += 10;
+        _additionalAnimationSpeed *= 1.1f;
+        _movementSpeed *= 1.1f;
         _blueGreenColor = Math.Max(_blueGreenColor - 0.1f, 0f);
 
         _spawnCurrnetCooldownTime = _spawnCooldownTime;

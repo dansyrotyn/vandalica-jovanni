@@ -18,7 +18,16 @@ component _ed055072323381b4892d02449d957183_76521058939818504 [id "23"]
   Dead Bool [bits "1"]
   enabled Bool [bits "1"]
 
-component _fdd8092855022054e9c339b99ce2323a_884555094444823638 [id "24"]
+component _fdd8092855022054e9c339b99ce2323a_2811260201814078637 [id "24"]
+  speed Float [compression "None"]
+
+component _fdd8092855022054e9c339b99ce2323a_4530313596208706395 [id "25"]
+  flipX Bool [bits "1"]
+
+component _fdd8092855022054e9c339b99ce2323a_5729286325588990472 [id "26"]
+  Speed Float [compression "None"]
+
+component _fdd8092855022054e9c339b99ce2323a_884555094444823638 [id "27"]
   Health Int [bits "10", range-min "0", range-max "1000"]
 
 command _714b9f8fd47e343158014373676f77d0_97320cdaa6f641c98d6f57d68520c0e5 [id "6", routing "All"]

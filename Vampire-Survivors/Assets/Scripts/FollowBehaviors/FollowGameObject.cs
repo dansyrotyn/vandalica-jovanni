@@ -3,8 +3,20 @@ using UnityEngine;
 public class FollowGameObject : MonoBehaviour
 {
     [SerializeField] private float _speed;
-    [SerializeField] private float _distanceOffsetFromTarget; 
+    [SerializeField] private float _distanceOffsetFromTarget;
     [SerializeField] private GameObject _target;
+
+    public float Speed
+    {
+        get
+        {
+            return _speed;
+        }
+        set
+        {
+            _speed = value;
+        }
+    }
 
     private Rigidbody2D _rb;
 
@@ -33,7 +45,7 @@ public class FollowGameObject : MonoBehaviour
     {
         if (_target == null)
         {
-            _rb.linearVelocity = Vector3.zero; 
+            _rb.linearVelocity = Vector3.zero;
             return;
         }
 
