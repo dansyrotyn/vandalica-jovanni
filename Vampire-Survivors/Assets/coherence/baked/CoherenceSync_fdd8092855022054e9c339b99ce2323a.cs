@@ -76,108 +76,6 @@ namespace Coherence.Generated
         }    
     }
     [UnityEngine.Scripting.Preserve, System.Serializable]
-    public class Binding_fdd8092855022054e9c339b99ce2323a_b84bc6695a394831b9b301ffc2520b10 : ScaleBinding
-    {   
-        private global::UnityEngine.Transform CastedUnityComponent;
-
-        protected override void OnBindingCloned()
-        {
-    	    CastedUnityComponent = (global::UnityEngine.Transform)UnityComponent;
-        }
-
-        public override global::System.Type CoherenceComponentType => typeof(GenericScale);
-        public override string CoherenceComponentName => "GenericScale";
-        public override uint FieldMask => 0b00000000000000000000000000000001;
-
-        public override UnityEngine.Vector3 Value
-        {
-            get { return (UnityEngine.Vector3)(coherenceSync.coherenceLocalScale); }
-            set { coherenceSync.coherenceLocalScale = (UnityEngine.Vector3)(value); }
-        }
-
-        protected override (UnityEngine.Vector3 value, AbsoluteSimulationFrame simFrame) ReadComponentData(ICoherenceComponentData coherenceComponent, Vector3 floatingOriginDelta)
-        {
-            var value = ((GenericScale)coherenceComponent).value;
-
-            var simFrame = ((GenericScale)coherenceComponent).valueSimulationFrame;
-            
-            return (value, simFrame);
-        }
-
-        public override ICoherenceComponentData WriteComponentData(ICoherenceComponentData coherenceComponent, AbsoluteSimulationFrame simFrame)
-        {
-            var update = (GenericScale)coherenceComponent;
-            if (Interpolator.IsInterpolationNone)
-            {
-                update.value = Value;
-            }
-            else
-            {
-                update.value = GetInterpolatedAt(simFrame / InterpolationSettings.SimulationFramesPerSecond);
-            }
-
-            update.valueSimulationFrame = simFrame;
-            
-            return update;
-        }
-
-        public override ICoherenceComponentData CreateComponentData()
-        {
-            return new GenericScale();
-        }    
-    }
-    [UnityEngine.Scripting.Preserve, System.Serializable]
-    public class Binding_fdd8092855022054e9c339b99ce2323a_6509f6a9b38e4748882096aacf345657 : RotationBinding
-    {   
-        private global::UnityEngine.Transform CastedUnityComponent;
-
-        protected override void OnBindingCloned()
-        {
-    	    CastedUnityComponent = (global::UnityEngine.Transform)UnityComponent;
-        }
-
-        public override global::System.Type CoherenceComponentType => typeof(WorldOrientation);
-        public override string CoherenceComponentName => "WorldOrientation";
-        public override uint FieldMask => 0b00000000000000000000000000000001;
-
-        public override UnityEngine.Quaternion Value
-        {
-            get { return (UnityEngine.Quaternion)(coherenceSync.coherenceRotation); }
-            set { coherenceSync.coherenceRotation = (UnityEngine.Quaternion)(value); }
-        }
-
-        protected override (UnityEngine.Quaternion value, AbsoluteSimulationFrame simFrame) ReadComponentData(ICoherenceComponentData coherenceComponent, Vector3 floatingOriginDelta)
-        {
-            var value = ((WorldOrientation)coherenceComponent).value;
-
-            var simFrame = ((WorldOrientation)coherenceComponent).valueSimulationFrame;
-            
-            return (value, simFrame);
-        }
-
-        public override ICoherenceComponentData WriteComponentData(ICoherenceComponentData coherenceComponent, AbsoluteSimulationFrame simFrame)
-        {
-            var update = (WorldOrientation)coherenceComponent;
-            if (Interpolator.IsInterpolationNone)
-            {
-                update.value = Value;
-            }
-            else
-            {
-                update.value = GetInterpolatedAt(simFrame / InterpolationSettings.SimulationFramesPerSecond);
-            }
-
-            update.valueSimulationFrame = simFrame;
-            
-            return update;
-        }
-
-        public override ICoherenceComponentData CreateComponentData()
-        {
-            return new WorldOrientation();
-        }    
-    }
-    [UnityEngine.Scripting.Preserve, System.Serializable]
     public class Binding_fdd8092855022054e9c339b99ce2323a_5e6e806b31274770bceacede4f916996 : IntBinding
     {   
         private global::SkeletonEntity CastedUnityComponent;
@@ -243,8 +141,6 @@ namespace Coherence.Generated
         private readonly Dictionary<string, Binding> bakedValueBindings = new Dictionary<string, Binding>()
         {
 			["6a2f12a25cae4b77a9de508896d78217"] = new Binding_fdd8092855022054e9c339b99ce2323a_6a2f12a25cae4b77a9de508896d78217(),
-			["b84bc6695a394831b9b301ffc2520b10"] = new Binding_fdd8092855022054e9c339b99ce2323a_b84bc6695a394831b9b301ffc2520b10(),
-			["6509f6a9b38e4748882096aacf345657"] = new Binding_fdd8092855022054e9c339b99ce2323a_6509f6a9b38e4748882096aacf345657(),
 			["5e6e806b31274770bceacede4f916996"] = new Binding_fdd8092855022054e9c339b99ce2323a_5e6e806b31274770bceacede4f916996(),
         };
         

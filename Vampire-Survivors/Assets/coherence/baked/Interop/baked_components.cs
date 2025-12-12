@@ -3836,8 +3836,8 @@ namespace Coherence.Generated
             public bool IsSendOrdered() => false;
             public bool IsWorldPositionComponent() => false;
     
-            private static readonly System.Int32 _Health_Min = -2147483648;
-            private static readonly System.Int32 _Health_Max = 2147483647;
+            private static readonly System.Int32 _Health_Min = 0;
+            private static readonly System.Int32 _Health_Max = 1000;
     
             public AbsoluteSimulationFrame? GetMinSimulationFrame()
             {
@@ -3892,7 +3892,7 @@ namespace Coherence.Generated
     
 
     
-                    bitStream.WriteIntegerRange(fieldValue, 32, -2147483648);
+                    bitStream.WriteIntegerRange(fieldValue, 10, 0);
                 }
     
                 mask >>= 1;
@@ -3912,7 +3912,7 @@ namespace Coherence.Generated
                 if (bitStream.ReadMask())
                 {
     
-                    val.Health = bitStream.ReadIntegerRange(32, -2147483648);
+                    val.Health = bitStream.ReadIntegerRange(10, 0);
                     val.FieldsMask |= _fdd8092855022054e9c339b99ce2323a_884555094444823638.HealthMask;
                 }
     

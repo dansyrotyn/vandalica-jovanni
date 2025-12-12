@@ -334,15 +334,12 @@ MonoBehaviour:
   preserveChildren: 0
   bindings:
   - rid: 5571819367259177371
-  - rid: 5571819367259177375
-  - rid: 5571819367259177377
   - rid: 5571819390568235506
   scenePrefabInstanceUUID: 
   coherenceUUID: 
   assetVersion: 
   coherenceTag: 
   componentActions:
-  - rid: 5571819367259177435
   - rid: 5571819367259177436
   - rid: 5571819390568235146
   floatingOriginMode: 0
@@ -361,13 +358,13 @@ MonoBehaviour:
         routing: 0
         syncMode: 0
         isPredicted: 0
-        predictionMode: 0
+        predictionMode: 1
         guid: 6a2f12a25cae4b77a9de508896d78217
         archetypeData:
           type: 7
           minRange: 0
           maxRange: 0
-          sampleRate: 20
+          sampleRate: 60
           floatCompression: 0
           fields:
           - type: 7
@@ -376,7 +373,7 @@ MonoBehaviour:
             floatCompression: 0
         unityComponent: {fileID: 3581249605875409047}
         coherenceSync: {fileID: -4274853374150864279}
-        interpolationSettings: {fileID: 11400000, guid: ae4419d1d9a8643709bf5f6b90c584a5, type: 2}
+        interpolationSettings: {fileID: 11400000, guid: b2d0a471c4baf4948883656ba0b86c3d, type: 2}
     - rid: 5571819367259177372
       type: {class: Descriptor, ns: Coherence.Toolkit.Bindings, asm: Coherence.Toolkit}
       data:
@@ -398,100 +395,6 @@ MonoBehaviour:
             Coherence.Toolkit, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         oldName: 
         oldParameterAssemblyTypes: []
-    - rid: 5571819367259177375
-      type: {class: ScaleBinding, ns: Coherence.Toolkit.Bindings.TransformBindings, asm: Coherence.Toolkit}
-      data:
-        descriptor:
-          rid: 5571819367259177376
-        routing: 0
-        syncMode: 0
-        isPredicted: 0
-        predictionMode: 0
-        guid: b84bc6695a394831b9b301ffc2520b10
-        archetypeData:
-          type: 7
-          minRange: 0
-          maxRange: 0
-          sampleRate: 20
-          floatCompression: 0
-          fields:
-          - type: 7
-            bits: 32
-            precision: 0.001
-            floatCompression: 0
-        unityComponent: {fileID: 3581249605875409047}
-        coherenceSync: {fileID: -4274853374150864279}
-        interpolationSettings: {fileID: 11400000, guid: ae4419d1d9a8643709bf5f6b90c584a5, type: 2}
-    - rid: 5571819367259177376
-      type: {class: Descriptor, ns: Coherence.Toolkit.Bindings, asm: Coherence.Toolkit}
-      data:
-        name: localScale
-        monoAssemblyType: UnityEngine.Vector3, UnityEngine
-        required: 0
-        enforcesLODingWhenFieldsOverriden: 1
-        valueSyncCallbackName: 
-        memberType: 64
-        parameterAssemblyTypes: []
-        ownerType:
-          assemblyQualifiedName: UnityEngine.Transform, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-        defaultSyncMode: 0
-        CustomData:
-          rid: -2
-        bindingType:
-          assemblyQualifiedName: Coherence.Toolkit.Bindings.TransformBindings.ScaleBinding,
-            Coherence.Toolkit, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-        oldName: 
-        oldParameterAssemblyTypes: []
-    - rid: 5571819367259177377
-      type: {class: RotationBinding, ns: Coherence.Toolkit.Bindings.TransformBindings, asm: Coherence.Toolkit}
-      data:
-        descriptor:
-          rid: 5571819367259177378
-        routing: 0
-        syncMode: 0
-        isPredicted: 0
-        predictionMode: 0
-        guid: 6509f6a9b38e4748882096aacf345657
-        archetypeData:
-          type: 8
-          minRange: 0
-          maxRange: 0
-          sampleRate: 20
-          floatCompression: 0
-          fields:
-          - type: 8
-            bits: 32
-            precision: 0.00000008381903171539307
-            floatCompression: 0
-        unityComponent: {fileID: 3581249605875409047}
-        coherenceSync: {fileID: -4274853374150864279}
-        interpolationSettings: {fileID: 11400000, guid: ae4419d1d9a8643709bf5f6b90c584a5, type: 2}
-    - rid: 5571819367259177378
-      type: {class: Descriptor, ns: Coherence.Toolkit.Bindings, asm: Coherence.Toolkit}
-      data:
-        name: rotation
-        monoAssemblyType: UnityEngine.Quaternion, UnityEngine
-        required: 0
-        enforcesLODingWhenFieldsOverriden: 1
-        valueSyncCallbackName: 
-        memberType: 64
-        parameterAssemblyTypes: []
-        ownerType:
-          assemblyQualifiedName: UnityEngine.Transform, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-        defaultSyncMode: 0
-        CustomData:
-          rid: -2
-        bindingType:
-          assemblyQualifiedName: Coherence.Toolkit.Bindings.TransformBindings.RotationBinding,
-            Coherence.Toolkit, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-        oldName: 
-        oldParameterAssemblyTypes: []
-    - rid: 5571819367259177435
-      type: {class: DisableBehaviourComponentAction, ns: Coherence.Toolkit.ComponentActions, asm: Coherence.Toolkit}
-      data:
-        component: {fileID: 5729286325588990472}
     - rid: 5571819367259177436
       type: {class: DisableBehaviourComponentAction, ns: Coherence.Toolkit.ComponentActions, asm: Coherence.Toolkit}
       data:
@@ -514,13 +417,13 @@ MonoBehaviour:
         guid: 5e6e806b31274770bceacede4f916996
         archetypeData:
           type: 1
-          minRange: -2147483648
-          maxRange: 2147483647
+          minRange: 0
+          maxRange: 1000
           sampleRate: 20
           floatCompression: 0
           fields:
           - type: 1
-            bits: 32
+            bits: 10
             precision: 0
             floatCompression: 0
         unityComponent: {fileID: 884555094444823638}

@@ -19,7 +19,7 @@ component _ed055072323381b4892d02449d957183_76521058939818504 [id "23"]
   enabled Bool [bits "1"]
 
 component _fdd8092855022054e9c339b99ce2323a_884555094444823638 [id "24"]
-  Health Int [bits "32", range-min "-2147483648", range-max "2147483647"]
+  Health Int [bits "10", range-min "0", range-max "1000"]
 
 command _714b9f8fd47e343158014373676f77d0_97320cdaa6f641c98d6f57d68520c0e5 [id "6", routing "All"]
   spawnPosition Vector3 [compression "None"]

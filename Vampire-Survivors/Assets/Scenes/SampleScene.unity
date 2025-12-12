@@ -2970,6 +2970,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerKnight 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4311686958633665632, guid: ed055072323381b4892d02449d957183, type: 3}
+      propertyPath: _maxHealth
+      value: 300
+      objectReference: {fileID: 0}
     - target: {fileID: 7289916420862949719, guid: ed055072323381b4892d02449d957183, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -23648,6 +23652,18 @@ PrefabInstance:
     - target: {fileID: 2222486291842305891, guid: ddd7bc34091ff604784caf302fe6c3ee, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2611792902500378772, guid: ddd7bc34091ff604784caf302fe6c3ee, type: 3}
+      propertyPath: _spawnCount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2611792902500378772, guid: ddd7bc34091ff604784caf302fe6c3ee, type: 3}
+      propertyPath: _spawnCooldownTime
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2611792902500378772, guid: ddd7bc34091ff604784caf302fe6c3ee, type: 3}
+      propertyPath: _spawnCurrnetCooldownTime
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3765046994536478519, guid: ddd7bc34091ff604784caf302fe6c3ee, type: 3}
       propertyPath: scenePrefabInstanceUUID

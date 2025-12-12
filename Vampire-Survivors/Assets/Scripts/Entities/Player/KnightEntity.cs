@@ -14,7 +14,8 @@ public class KnightEntity : EntityPlayer
     protected override void Start()
     {
         base.Start();
-        for (int i = 0; i < _maxHealth; i++)
+        var hearts = Mathf.Min(4, _maxHealth);
+        for (int i = 0; i < hearts; i++)
         {
             Instantiate(_heartPrefab, _UIHeartGrid.transform);
         }
@@ -28,7 +29,7 @@ public class KnightEntity : EntityPlayer
         {
             Health -= damage;
             _visual.Animator.SetTrigger(ANIM_TRIGGER_HURT);
-            
+
         }
     }
 
