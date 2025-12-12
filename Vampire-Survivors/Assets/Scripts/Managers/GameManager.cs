@@ -1,6 +1,7 @@
+using Coherence;
 using Coherence.Toolkit;
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using Unity.Cinemachine;
 using UnityEngine;
@@ -52,14 +53,14 @@ public class GameManager : MonoBehaviour
     public void ResumeGame()
     {
         _pauseMenuPanel.SetActive(false);
-        Time.timeScale = 1f;
+        //Time.timeScale = 1f;
         _isPaused = false;
     }
 
     public void PauseGame()
     {
         _pauseMenuPanel.SetActive(true);
-        Time.timeScale = 0f;
+        //Time.timeScale = 0f;
         _isPaused = true;
     }
 
@@ -110,9 +111,34 @@ public class GameManager : MonoBehaviour
         //PlayerSpawner.Instance.SpawnPlayer(true);
         //PlayerSpawner.Instance.SpawnPlayer(true);
         CoherenceBridgeStore.TryGetBridge(gameObject.scene, out bridge);
-        
-        
+    }
 
+    public void RestartGame()
+    {
+        var sync = GetComponent<CoherenceSync>();
+        sync.SendCommand<GameManager>(
+        nameof(RestartClient),
+        MessageTarget.All);
+    }
+
+    [Command()]
+    public void RestartClient()
+    {
+        foreach (var enemy in EnemyList)
+        {
+            enemy.DestroySelf();
+        }
+        EnemyList.Clear();
+
+        foreach (var player in PlayerList)
+        {
+            player.Reborn();
+        }
+        _monotonicTimer = 0;
+
+        _showingFinalScoreInfo = false;
+        _finalScoreUI.SetActive(false);
+        PlayerScores.Clear();
     }
 
     void Update()
@@ -123,7 +149,7 @@ public class GameManager : MonoBehaviour
         }
 
         if (_showingFinalScoreInfo) return;
-        if (PlayerList.Count == 0)
+        if (PlayerList.Count == 0 || !PlayerList.Any(static x => x.gameObject.activeSelf))
         {
             _finalScoreUI.SetActive(true);
             foreach (PlayerScoreInfo info in PlayerScores)
@@ -138,7 +164,7 @@ public class GameManager : MonoBehaviour
             }
 
             _showingFinalScoreInfo = true;
-            Time.timeScale = 0.0f;
+            //Time.timeScale = 0.0f;
             return;
         }
 
@@ -183,7 +209,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            if(lastWave != EnemyWaveSpawner.Instance.GetWaveNumber())
+            if (lastWave != EnemyWaveSpawner.Instance.GetWaveNumber())
             {
                 _waveText.text = "Wave: " + EnemyWaveSpawner.Instance.GetWaveNumber();
             }
@@ -196,7 +222,7 @@ public class GameManager : MonoBehaviour
 
     internal void RegisterEntity(Entity entity)
     {
-        if(entity is EntityPlayer player)
+        if (entity is EntityPlayer player)
         {
             PlayerList.Add(player);
         }

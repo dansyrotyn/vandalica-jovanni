@@ -36,6 +36,23 @@ public abstract class Entity : MonoBehaviour, IDamagable
         GameManager.Instance.UnregisterEntity(this);
 
     }
+
+    public virtual void Reborn()
+    {
+        if (IsLocal)
+        {
+            _isDead = false;
+            Health = _maxHealth;
+        }
+    }
+
+    public void DestroySelf()
+    {
+        if(IsLocal)
+        {
+            Destroy(gameObject);
+        }
+    }
 }
 
 public enum EntityPlayerType
@@ -47,7 +64,7 @@ public enum EntityPlayerType
 public abstract class EntityPlayer : Entity
 {
     [Header("Player Entity Info")]
-    [SerializeField] private Sprite _sprite;
+    [SerializeField] protected Sprite _sprite;
 
     public int EnemyKillCount { set; get; }
     protected EntityPlayerType _type;
@@ -55,6 +72,11 @@ public abstract class EntityPlayer : Entity
     protected override void OnDestroy()
     {
         base.OnDestroy();
+        
+    }
+
+    protected void OnDeath()
+    {
         PlayerScoreInfo info = new PlayerScoreInfo();
         info.type = _type;
         info.spirte = _sprite;

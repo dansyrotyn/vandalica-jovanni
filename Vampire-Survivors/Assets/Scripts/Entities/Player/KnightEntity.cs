@@ -11,6 +11,8 @@ public class KnightEntity : EntityPlayer
     private const string ANIM_BOOL_DEAD = "Dead";
     private const string ANIM_DEATH = "KnightDeathAnim";
 
+    private Vector3 startPos;
+
     protected override void Start()
     {
         base.Start();
@@ -21,6 +23,24 @@ public class KnightEntity : EntityPlayer
         }
 
         _type = EntityPlayerType.KNIGHT;
+
+        startPos = transform.position;
+    }
+
+    public override void Reborn()
+    {
+        base.Reborn();
+
+        transform.position = startPos;
+
+        _visual.Reborn();
+
+        var hearts = Mathf.Min(4, _maxHealth) - _UIHeartGrid.transform.childCount;
+        for (int i = 0; i < hearts; i++)
+        {
+            Instantiate(_heartPrefab, _UIHeartGrid.transform);
+        }
+        gameObject.SetActive(true);
     }
 
     public override void Damage(int damage)
@@ -51,8 +71,9 @@ public class KnightEntity : EntityPlayer
             _isDead = true;
             _visual.FadeOutDeathTask(ANIM_DEATH, false).ContinueWith(_ =>
                 {
-                    GameManager.Instance.PlayerList.Remove(this);
-                    Destroy(this.gameObject);
+                    //GameManager.Instance.PlayerList.Remove(this);
+                    gameObject.SetActive(false);
+                    OnDeath();
                 },
 
                 TaskScheduler.FromCurrentSynchronizationContext()

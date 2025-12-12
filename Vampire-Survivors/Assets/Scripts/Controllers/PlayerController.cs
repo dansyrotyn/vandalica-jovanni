@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -34,7 +33,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
-        GameManager.Instance.EventControllablePlayerIsDead.AddListener(FreezePlayerController);
+        //GameManager.Instance.EventControllablePlayerIsDead.AddListener(FreezePlayerController);
     }
 
     private void Update()
@@ -46,6 +45,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        
         if (shouldFreezePlayerController)
         {
             _rigidbody.linearVelocity = Vector3.zero;

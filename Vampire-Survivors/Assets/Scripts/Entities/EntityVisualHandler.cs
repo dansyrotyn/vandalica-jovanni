@@ -7,10 +7,13 @@ public class EntityVisualHandler : MonoBehaviour
     public SpriteRenderer SpriteRenderer { set; get; }
     public Animator Animator { set; get; }
 
+    Color startColor;
+
     void Awake()
     {
         SpriteRenderer = GetComponent<SpriteRenderer>();
         Animator = GetComponent<Animator>();
+        startColor = SpriteRenderer.color;
     }
 
     public void FaceTarget(Transform target)
@@ -21,6 +24,10 @@ public class EntityVisualHandler : MonoBehaviour
         }
     }
 
+    public void Reborn()
+    {
+        SpriteRenderer.color = startColor;
+    }
 
     // Note(Jovanni):
     // It is the job of the caller to do

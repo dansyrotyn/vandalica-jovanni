@@ -11,13 +11,33 @@ namespace Coherence.Generated
     
     public static class Archetypes
     {
+        public const int _a55cf70594cc67b49954c6086f44af79Index = 0;
 
         public static readonly EntityArchetype[] Definitions =
 		{
+            new EntityArchetype() // _a55cf70594cc67b49954c6086f44af79
+            {
+                LODs = new EntityArchetypeLOD[]
+                {
+                    new EntityArchetypeLOD
+                    {
+                        Level = 0,
+                        Distance = 0f,
+                        ComponentReplacement = new Dictionary<uint, uint>
+                        {
+                            { 0, Definition.InternalArchetype_a55cf70594cc67b49954c6086f44af79_WorldPosition_LOD0 },
+                        },
+                        ComponentsExcluded = new uint[] 
+                        {
+                        },
+                    },
+                },
+            },
 		};
     
         public static Dictionary<string, int> IndexForName = new Dictionary<string, int>() 
         {
+            { "_a55cf70594cc67b49954c6086f44af79", 0 },
         };
     }     
     

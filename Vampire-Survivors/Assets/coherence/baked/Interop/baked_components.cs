@@ -177,6 +177,27 @@ namespace Coherence.Generated
                 return val;
             }
     
+            public static WorldPosition DeserializeArchetype_a55cf70594cc67b49954c6086f44af79_WorldPosition_LOD0(AbsoluteSimulationFrame referenceSimulationFrame, InProtocolBitStream bitStream)
+            {
+                var stoppedMask = (uint)0;
+                if (bitStream.ReadMask())
+                {
+                    stoppedMask = bitStream.ReadMaskBits(1);
+                }
+    
+                var val = new WorldPosition();
+                if (bitStream.ReadMask())
+                {
+                    val.valueSimulationFrame = referenceSimulationFrame + DeserializerTools.ReadFieldSimFrameDelta(bitStream);
+    
+                    val.value = bitStream.ReadVector3(FloatMeta.ForFixedPoint(0, 1, 0.001d)).ToUnityVector3();
+                    val.FieldsMask |= valueMask;
+                }
+    
+                val.StoppedMask = stoppedMask;
+    
+                return val;
+            }
     
             public override string ToString()
             {
