@@ -28,6 +28,10 @@ public class SkeletonEntity : EntityEnemy
         EntityPlayer closestPlayer = null;
         foreach (EntityPlayer player in GameManager.Instance.PlayerList)
         {
+            if (!player.isActiveAndEnabled)
+            {
+                continue;
+            }
             float dist = Vector3.Distance(this.transform.position, player.transform.position);
             if (dist < minimumDistance)
             {
@@ -86,6 +90,10 @@ public class SkeletonEntity : EntityEnemy
     
     private void UnityAnimationEvent_TryAttackPlayer()
     {
+        if (!_playerReference)
+        {
+            return;
+        }
         float distanceToPlayer = Vector2.Distance(_playerReference.transform.position, transform.position);
         if (distanceToPlayer <= _attackRadius)
         {

@@ -361,13 +361,13 @@ MonoBehaviour:
         routing: 0
         syncMode: 0
         isPredicted: 0
-        predictionMode: 1
+        predictionMode: 0
         guid: 6a2f12a25cae4b77a9de508896d78217
         archetypeData:
           type: 7
           minRange: 0
           maxRange: 0
-          sampleRate: 60
+          sampleRate: 1
           floatCompression: 0
           fields:
           - type: 7
