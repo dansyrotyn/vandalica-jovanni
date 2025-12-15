@@ -1,8 +1,8 @@
+using Coherence;
 using Coherence.Toolkit;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 using Random = UnityEngine.Random;
 
@@ -14,19 +14,20 @@ public class EnemyWaveSpawner : MonoBehaviour
     [SerializeField] private GameObject _entityPrefab;
     [SerializeField] private int _spawnCount = 10;
     [SerializeField] private float _spawnCooldownTime = 5.0f;
-    [SerializeField] private float _spawnCurrnetCooldownTime = 0.0f;
+    [SerializeField] private int _maxEnemiesCount = 400;
+    [SerializeField] private float _maxUnitsSpeed = 1.0f;
 
     public int WaveNumber { get; set; } = 0;
+    public float SpawnCurrnetCooldownTime { get; set; } = 0.0f;
 
     protected CoherenceSync networkSync;
     public bool IsLocal => networkSync && networkSync.HasStateAuthority;
 
     private float _blueGreenColor = 1.0f;
-    private float _additionalAnimationSpeed = 0.1f;
     private float _movementSpeed = 1f;
 
-    public int GetWaveNumber() =>  WaveNumber;
-    public bool IsOnCooldown() => _spawnCurrnetCooldownTime > 0.0f;
+    public int GetWaveNumber() => WaveNumber;
+    public bool IsOnCooldown() => SpawnCurrnetCooldownTime > 0.0f;
 
     // expensive don't do this every frame!
     public List<GameObject> GetEnemies()
@@ -40,11 +41,14 @@ public class EnemyWaveSpawner : MonoBehaviour
         return enemies;
     }
 
-    void SpawnOnGroundLayer()
+
+    [Command()]
+
+    public void SpawnOnGroundLayer(int toSpawn)
     {
         List<Vector3> playableArea = GameManager.Instance.GetPlayableArea();
 
-        for (int i = 0; i < _spawnCount; i++)
+        for (int i = 0; i < toSpawn; i++)
         {
             Vector3 worldPos = playableArea[Random.Range(0, playableArea.Count)];
             EntityEnemy enemy = Instantiate(_entityPrefab, worldPos, Quaternion.identity, transform).GetComponent<EntityEnemy>();
@@ -57,44 +61,71 @@ public class EnemyWaveSpawner : MonoBehaviour
             skeletonColor.b = _blueGreenColor;
 
             follow.SetSpeed(_movementSpeed);
-            skeletonAnim.speed += _additionalAnimationSpeed;
+            skeletonAnim.speed *= _movementSpeed;
             skeletonRenderer.color = skeletonColor;
         }
     }
 
-    public void SpawnNextWave()
+    public void ResetSpawner()
     {
-        if (IsOnCooldown()) return;
-
-        SpawnOnGroundLayer();
-        WaveNumber += 1;
-        _spawnCount += 10;
-        _additionalAnimationSpeed *= 1.1f;
-        _movementSpeed *= 1.1f;
-        _blueGreenColor = Math.Max(_blueGreenColor - 0.1f, 0f);
-
-        _spawnCurrnetCooldownTime = _spawnCooldownTime;
+        WaveNumber = 0;
+        _spawnCount = 10;
+        _movementSpeed = 1f;
+        _blueGreenColor = 1.0f;
+        SpawnCurrnetCooldownTime = 0.0f;
     }
 
-    private void Awake() 
-    { 
-        if (Instance != null && Instance != this) 
-        { 
-            Destroy(this); 
-        } 
-        else 
-        { 
+    public void SpawnNextWave(int clients = 1)
+    {
+        if (!IsLocal) return;
+
+        if (IsOnCooldown()) return;
+
+        if (clients <= 0) return;
+
+        var currentEnemies = GameManager.Instance.EnemyList.Count;
+
+        _spawnCount = Mathf.Min(_spawnCount, _maxEnemiesCount - currentEnemies);
+
+        if (_spawnCount <= 0) return;
+
+        var toSpawn = _spawnCount / clients;
+        networkSync.SendCommand<EnemyWaveSpawner>(
+        nameof(SpawnOnGroundLayer),
+        MessageTarget.All, toSpawn);
+        _spawnCount += 10;
+
+        _movementSpeed *= 1.1f;
+        if(_movementSpeed > _maxUnitsSpeed)
+        {
+            _movementSpeed = _maxUnitsSpeed;
+        }
+        _blueGreenColor = Math.Max(_blueGreenColor - 0.1f, 0f);
+
+       
+        SpawnCurrnetCooldownTime = _spawnCooldownTime;
+        WaveNumber += 1;
+    }
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
             Instance = this;
             networkSync = GetComponent<CoherenceSync>();
         }
     }
-    
+
 
     void Update()
     {
-        if( IsLocal)
+        if (IsLocal)
         {
-            _spawnCurrnetCooldownTime = (float)Math.Max(_spawnCurrnetCooldownTime - Time.deltaTime, 0.0f);
+            SpawnCurrnetCooldownTime = (float)Math.Max(SpawnCurrnetCooldownTime - Time.deltaTime, 0.0f);
         }
     }
 }

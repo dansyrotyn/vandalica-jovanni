@@ -48,7 +48,8 @@ MonoBehaviour:
   _entityPrefab: {fileID: 7093695742421028849, guid: fdd8092855022054e9c339b99ce2323a, type: 3}
   _spawnCount: 10
   _spawnCooldownTime: 5
-  _spawnCurrnetCooldownTime: 0
+  _maxEnemiesCount: 400
+  _maxUnitsSpeed: 1
 --- !u!114 &3765046994536478519
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -136,6 +137,7 @@ MonoBehaviour:
   bindings:
   - rid: 5571819390568235910
   - rid: 5571819390568235912
+  - rid: 5571819505901376187
   scenePrefabInstanceUUID: 
   coherenceUUID: es
   assetVersion: 
@@ -237,5 +239,47 @@ MonoBehaviour:
         bindingType:
           assemblyQualifiedName: Coherence.Toolkit.Bindings.ValueBindings.IntBinding,
             Coherence.Toolkit, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        oldName: 
+        oldParameterAssemblyTypes: []
+    - rid: 5571819505901376187
+      type: {class: CommandBinding, ns: Coherence.Toolkit.Bindings, asm: Coherence.Toolkit}
+      data:
+        descriptor:
+          rid: 5571819505901376188
+        routing: 1
+        syncMode: 0
+        isPredicted: 0
+        predictionMode: 0
+        guid: abb7786ebe0c45b7836f27fb88dfd3e9
+        archetypeData:
+          type: 0
+          minRange: 0
+          maxRange: 0
+          sampleRate: 20
+          floatCompression: 0
+          fields: []
+        unityComponent: {fileID: 2611792902500378772}
+        coherenceSync: {fileID: 3765046994536478519}
+        interpolationSettings: {fileID: 0}
+    - rid: 5571819505901376188
+      type: {class: Descriptor, ns: Coherence.Toolkit.Bindings, asm: Coherence.Toolkit}
+      data:
+        name: SpawnOnGroundLayer
+        monoAssemblyType: 
+        required: 1
+        enforcesLODingWhenFieldsOverriden: 0
+        valueSyncCallbackName: 
+        memberType: 8
+        parameterAssemblyTypes:
+        - System.Int32, mscorlib
+        ownerType:
+          assemblyQualifiedName: EnemyWaveSpawner, Assembly-CSharp, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        defaultSyncMode: 0
+        CustomData:
+          rid: -2
+        bindingType:
+          assemblyQualifiedName: Coherence.Toolkit.Bindings.CommandBinding, Coherence.Toolkit,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         oldName: 
         oldParameterAssemblyTypes: []

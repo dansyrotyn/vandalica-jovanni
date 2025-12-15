@@ -139,6 +139,7 @@ public class GameManager : MonoBehaviour
         _showingFinalScoreInfo = false;
         _finalScoreUI.SetActive(false);
         PlayerScores.Clear();
+        EnemyWaveSpawner.Instance.ResetSpawner();
     }
 
     void Update()
@@ -206,22 +207,31 @@ public class GameManager : MonoBehaviour
         // This is probably not great for performance 
         // because you are doing allocations of some kind every frame.
         _timeText.text = "Time: " + _monotonicTimer.ToString("0.00");
-        if (EnemyWaveSpawner.Instance.IsLocal)
+
+        if (!EnemyWaveSpawner.Instance.IsOnCooldown())
         {
-            if (!EnemyWaveSpawner.Instance.IsOnCooldown())
-            {
-                EnemyWaveSpawner.Instance.SpawnNextWave();
-                _waveText.text = "Wave: " + EnemyWaveSpawner.Instance.GetWaveNumber();
-            }
+            var clients = bridge.ClientConnections.ClientConnectionCount;
+            EnemyWaveSpawner.Instance.SpawnNextWave(clients);
+            _waveText.text = "Wave: " + EnemyWaveSpawner.Instance.GetWaveNumber();
         }
-        else
-        {
-            if (lastWave != EnemyWaveSpawner.Instance.GetWaveNumber())
-            {
-                _waveText.text = "Wave: " + EnemyWaveSpawner.Instance.GetWaveNumber();
-            }
-            lastWave = EnemyWaveSpawner.Instance.GetWaveNumber();
-        }
+
+        //if (EnemyWaveSpawner.Instance.IsLocal)
+        //{
+        //    if (!EnemyWaveSpawner.Instance.IsOnCooldown())
+        //    {
+
+        //        EnemyWaveSpawner.Instance.SpawnNextWave();
+        //        _waveText.text = "Wave: " + EnemyWaveSpawner.Instance.GetWaveNumber();
+        //    }
+        //}
+        //else
+        //{
+        //    if (lastWave != EnemyWaveSpawner.Instance.GetWaveNumber())
+        //    {
+        //        _waveText.text = "Wave: " + EnemyWaveSpawner.Instance.GetWaveNumber();
+        //    }
+        //    lastWave = EnemyWaveSpawner.Instance.GetWaveNumber();
+        //}
 
     }
 

@@ -35,6 +35,9 @@ command _714b9f8fd47e343158014373676f77d0_97320cdaa6f641c98d6f57d68520c0e5 [id "
 
 command _a55cf70594cc67b49954c6086f44af79_d94ea1d17cf745ee8dbdcc21cb00b6e1 [id "7", routing "All"]
 
+command _ddd7bc34091ff604784caf302fe6c3ee_abb7786ebe0c45b7836f27fb88dfd3e9 [id "8", routing "All"]
+  toSpawn Int 
+
 archetype _a55cf70594cc67b49954c6086f44af79 [id "0"]
   lod 0
     WorldPosition [id "28", base-id "0"]
