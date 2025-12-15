@@ -308,7 +308,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0babde286dad4ada9c746021f46dda0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeroEntity
-  _health: 0
   _maxHealth: 3
   _isDead: 0
   _sprite: {fileID: 815424164945274260, guid: b99de874d47f14697a312dc82277ab31, type: 3}

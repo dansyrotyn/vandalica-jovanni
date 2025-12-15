@@ -1,3 +1,4 @@
+using Coherence;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -63,17 +64,24 @@ public class KnightEntity : EntityPlayer
 
     private void Update()
     {
+        
         if (_isDead) return;
 
         HandleSpriteFlip();
         if (Health <= 0)
         {
+            
             _isDead = true;
             _visual.FadeOutDeathTask(ANIM_DEATH, false).ContinueWith(_ =>
                 {
                     //GameManager.Instance.PlayerList.Remove(this);
-                    gameObject.SetActive(false);
                     OnDeath();
+
+                    if (!IsLocal)
+                    {
+                        return;
+                    }
+                    gameObject.SetActive(false);
                 },
 
                 TaskScheduler.FromCurrentSynchronizationContext()

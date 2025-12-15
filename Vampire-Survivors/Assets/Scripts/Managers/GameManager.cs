@@ -152,9 +152,16 @@ public class GameManager : MonoBehaviour
         if (PlayerList.Count == 0 || !PlayerList.Any(static x => x.gameObject.activeSelf))
         {
             _finalScoreUI.SetActive(true);
+            foreach (Transform child in _finalScoreUI.transform)
+            {
+                if(child.TryGetComponent<ScoreCardInfo>(out var _))
+                {
+                    Destroy(child.gameObject);
+                }
+            }
+
             foreach (PlayerScoreInfo info in PlayerScores)
             {
-
                 GameObject scoreCard = Instantiate(_playerScoreInfoPrefab, _finalScoreUI.transform);
                 ScoreCardInfo uiInfo = scoreCard.GetComponent<ScoreCardInfo>();
                 uiInfo.image.sprite = info.spirte;

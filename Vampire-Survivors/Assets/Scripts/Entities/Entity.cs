@@ -75,7 +75,7 @@ public abstract class EntityPlayer : Entity
         
     }
 
-    protected void OnDeath()
+    public void OnDeath()
     {
         PlayerScoreInfo info = new PlayerScoreInfo();
         info.type = _type;
