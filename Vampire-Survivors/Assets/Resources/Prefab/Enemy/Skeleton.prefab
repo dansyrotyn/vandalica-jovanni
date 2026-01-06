@@ -16,6 +16,8 @@ GameObject:
   - component: {fileID: 5729286325588990472}
   - component: {fileID: 1013116379044959774}
   - component: {fileID: 884555094444823638}
+  - component: {fileID: -252374918152142714}
+  - component: {fileID: 4132905466976974234}
   m_Layer: 0
   m_Name: Skeleton
   m_TagString: Untagged
@@ -40,6 +42,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4530313596208706395
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -85,6 +88,7 @@ SpriteRenderer:
   m_SortingLayerID: 1744218633
   m_SortingLayer: 3
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 8681008312180965034, guid: fafcfdd4f5ca349c08dfdfc68ac870d2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -94,7 +98,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!95 &2811260201814078637
 Animator:
@@ -203,6 +206,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba6ddb22541cd418681b86505e6cac16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FollowGameObject
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   _speed: 1
   _distanceOffsetFromTarget: 0.5
   _target: {fileID: 0}
@@ -230,7 +236,62 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71ff23cd415da4f34a6306fa1481a69e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SkeletonEntity
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   _health: 0
   _maxHealth: 1
   _isDead: 0
+  type: 0
   _attackRadius: 0.5
+--- !u!114 &-252374918152142714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7093695742421028849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Mirror::Mirror.NetworkIdentity
+  sceneId: 0
+  _assetId: 3973340887
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
+--- !u!114 &4132905466976974234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7093695742421028849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ff3ba0becae47b8b9381191598957c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Mirror.Components::Mirror.NetworkTransformReliable
+  syncDirection: 1
+  syncMode: 0
+  syncInterval: 0
+  target: {fileID: 3581249605875409047}
+  syncPosition: 1
+  syncRotation: 0
+  syncScale: 0
+  onlySyncOnChange: 1
+  compressRotation: 1
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 1
+  coordinateSpace: 0
+  timelineOffset: 1
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  onlySyncOnChangeCorrectionMultiplier: 2
+  useFixedUpdate: 0
+  rotationSensitivity: 0.01
+  positionPrecision: 0.01
+  scalePrecision: 0.01

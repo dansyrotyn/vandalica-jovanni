@@ -1,9 +1,10 @@
+using Mirror;
 using UnityEngine;
 
-public class FollowGameObject : MonoBehaviour
+public class FollowGameObject : NetworkBehaviour
 {
     [SerializeField] private float _speed;
-    [SerializeField] private float _distanceOffsetFromTarget; 
+    [SerializeField] private float _distanceOffsetFromTarget;
     [SerializeField] private GameObject _target;
 
     private Rigidbody2D _rb;
@@ -26,14 +27,20 @@ public class FollowGameObject : MonoBehaviour
 
     private void Start()
     {
+        
         _rb = GetComponent<Rigidbody2D>();
     }
 
     private void FixedUpdate()
     {
+
+        if (!isServer)
+        {
+            return;
+        }
         if (_target == null)
         {
-            _rb.linearVelocity = Vector3.zero; 
+            _rb.linearVelocity = Vector3.zero;
             return;
         }
 

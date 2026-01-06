@@ -1,16 +1,17 @@
+using Mirror;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 using Random = UnityEngine.Random;
 
-public class EnemyWaveSpawner : MonoBehaviour
+public class EnemyWaveSpawner : NetworkBehaviour
 {
     public static EnemyWaveSpawner Instance { get; private set; }
 
     [Header("Spawner Stats")]
     [SerializeField] private GameObject _entityPrefab;
+    [SerializeField] private int maxAliveCount = 300;
     [SerializeField] private int _spawnCount = 10;
     [SerializeField] private float _spawnCooldownTime = 5.0f;
     [SerializeField] private float _spawnCurrnetCooldownTime = 0.0f;
@@ -20,7 +21,7 @@ public class EnemyWaveSpawner : MonoBehaviour
     private float _additionalAnimationSpeed = 0.1f;
     private float _movementSpeed = 1f;
 
-    public int GetWaveNumber() =>  _waveNumber;
+    public int GetWaveNumber() => _waveNumber;
     public bool IsOnCooldown() => _spawnCurrnetCooldownTime > 0.0f;
 
     // expensive don't do this every frame!
@@ -39,10 +40,16 @@ public class EnemyWaveSpawner : MonoBehaviour
     {
         List<Vector3> playableArea = GameManager.Instance.GetPlayableArea();
 
+        var alive = GameManager.Instance.EnemyList.Count;
+
+        var toSpawn = Math.Min(maxAliveCount - alive, _spawnCount);
+
+        if(toSpawn <= 0) return;
+
         for (int i = 0; i < _spawnCount; i++)
         {
             Vector3 worldPos = playableArea[Random.Range(0, playableArea.Count)];
-            EntityEnemy enemy = Instantiate(_entityPrefab, worldPos, Quaternion.identity, transform).GetComponent<EntityEnemy>();
+            EntityEnemy enemy = Instantiate(_entityPrefab, worldPos, Quaternion.identity).GetComponent<EntityEnemy>();
             SpriteRenderer skeletonRenderer = enemy.gameObject.GetComponent<SpriteRenderer>();
             Animator skeletonAnim = enemy.gameObject.GetComponent<Animator>();
             FollowGameObject follow = enemy.gameObject.GetComponent<FollowGameObject>();
@@ -54,6 +61,7 @@ public class EnemyWaveSpawner : MonoBehaviour
             follow.SetSpeed(_movementSpeed);
             skeletonAnim.speed += _additionalAnimationSpeed;
             skeletonRenderer.color = skeletonColor;
+            NetworkServer.Spawn(enemy.gameObject);
         }
     }
 
@@ -71,18 +79,18 @@ public class EnemyWaveSpawner : MonoBehaviour
         _spawnCurrnetCooldownTime = _spawnCooldownTime;
     }
 
-    private void Awake() 
-    { 
-        if (Instance != null && Instance != this) 
-        { 
-            Destroy(this); 
-        } 
-        else 
-        { 
-            Instance = this; 
-        } 
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
     }
-    
+
 
     void Update()
     {

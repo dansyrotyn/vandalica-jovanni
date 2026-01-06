@@ -5,6 +5,7 @@ using UnityEngine.Tilemaps;
 using Unity.Cinemachine;
 using UnityEngine.Events;
 using System;
+using Mirror;
 
 // then there could be like a formula you could derive from this data
 public struct PlayerScoreInfo
@@ -15,7 +16,7 @@ public struct PlayerScoreInfo
     public float timeSurvived;
 }
 
-public class GameManager : MonoBehaviour
+public class GameManager : NetworkBehaviour
 {
     public static GameManager Instance { get; private set; }
     private float _monotonicTimer;
@@ -97,20 +98,12 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-
-        _controllablePlayer = PlayerSpawner.Instance.SpawnPlayer(false).GetComponent<EntityPlayer>();
-        _cinemachineCamera.Follow = _controllablePlayer.transform;
-        _cinemachineCamera.LookAt = _controllablePlayer.transform;
-
-        PlayerSpawner.Instance.SpawnPlayer(true);
-        PlayerSpawner.Instance.SpawnPlayer(true);
-        PlayerSpawner.Instance.SpawnPlayer(true);
-        PlayerSpawner.Instance.SpawnPlayer(true);
-        PlayerSpawner.Instance.SpawnPlayer(true);
     }
 
     void Update()
     {
+        if(_controllablePlayer == null) return;
+
         if (_showingFinalScoreInfo) return;
         if (PlayerList.Count == 0)
         {
@@ -163,10 +156,21 @@ public class GameManager : MonoBehaviour
         // because you are doing allocations of some kind every frame.
         _timeText.text = "Time: " + _monotonicTimer.ToString("0.00");
 
-        if (!EnemyWaveSpawner.Instance.IsOnCooldown())
+        if(isServer)
         {
-            EnemyWaveSpawner.Instance.SpawnNextWave();
-            _waveText.text = "Wave: " + EnemyWaveSpawner.Instance.GetWaveNumber();
+            if (!EnemyWaveSpawner.Instance.IsOnCooldown())
+            {
+                EnemyWaveSpawner.Instance.SpawnNextWave();
+                _waveText.text = "Wave: " + EnemyWaveSpawner.Instance.GetWaveNumber();
+            }
         }
+        
+    }
+
+    internal void SetControllablePlayer(EntityPlayer entityPlayer)
+    {
+        _controllablePlayer = entityPlayer;
+        _cinemachineCamera.Follow = _controllablePlayer.transform;
+        _cinemachineCamera.LookAt = _controllablePlayer.transform;
     }
 }

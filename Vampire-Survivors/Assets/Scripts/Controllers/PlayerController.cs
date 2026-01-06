@@ -1,7 +1,8 @@
+using Mirror;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : NetworkBehaviour
 {
     private Rigidbody2D _rigidbody;
 
@@ -17,6 +18,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleInput()
     {
+        
         float inputX = Input.GetAxisRaw("Horizontal");
         float inputY = Input.GetAxisRaw("Vertical");
         _moveDirection = new Vector2(inputX, inputY).normalized;
@@ -41,7 +43,10 @@ public class PlayerController : MonoBehaviour
     {
         if (shouldFreezePlayerController) return;
 
-        HandleInput();
+        if(isLocalPlayer)
+        {
+            HandleInput();
+        }
     }
 
     private void FixedUpdate()

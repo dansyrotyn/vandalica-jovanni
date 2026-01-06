@@ -12,8 +12,9 @@ public class KnightEntity : EntityPlayer
     private const string ANIM_BOOL_DEAD = "Dead";
     private const string ANIM_DEATH = "KnightDeathAnim";
 
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         for (int i = 0; i < _maxHealth; i++)
         {
             Instantiate(_heartPrefab, _UIHeartGrid.transform);

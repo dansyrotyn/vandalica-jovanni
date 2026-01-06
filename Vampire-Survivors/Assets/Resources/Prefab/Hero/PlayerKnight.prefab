@@ -117,6 +117,9 @@ GameObject:
   - component: {fileID: 375276042542226918}
   - component: {fileID: 4311686958633665632}
   - component: {fileID: 840104688141165573}
+  - component: {fileID: 4258942496685212819}
+  - component: {fileID: 6759803075663043398}
+  - component: {fileID: 2451660734070372498}
   m_Layer: 3
   m_Name: PlayerKnight
   m_TagString: Untagged
@@ -143,6 +146,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &925196045170055489
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -188,6 +192,7 @@ SpriteRenderer:
   m_SortingLayerID: 1744218633
   m_SortingLayer: 3
   m_SortingOrder: 2
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 815424164945274260, guid: b99de874d47f14697a312dc82277ab31, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -197,7 +202,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!95 &76521058939818504
 Animator:
@@ -306,8 +310,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0babde286dad4ada9c746021f46dda0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeroEntity
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   _health: 0
-  _maxHealth: 3
+  _maxHealth: 1000
   _isDead: 0
   _sprite: {fileID: 815424164945274260, guid: b99de874d47f14697a312dc82277ab31, type: 3}
   _UIHeartGrid: {fileID: 6943935390467531922}
@@ -324,6 +331,74 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c98fba53e68448c6bee3f53ed885d6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EntityVisualHanlder
+--- !u!114 &4258942496685212819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1908577308967311437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Mirror::Mirror.NetworkIdentity
+  sceneId: 0
+  _assetId: 2592730471
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
+--- !u!114 &6759803075663043398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1908577308967311437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a553cb17010b2403e8523b558bffbc14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Mirror.Components::Mirror.NetworkTransformUnreliable
+  syncDirection: 1
+  syncMode: 0
+  syncInterval: 0
+  target: {fileID: 7289916420862949719}
+  syncPosition: 1
+  syncRotation: 0
+  syncScale: 0
+  onlySyncOnChange: 1
+  compressRotation: 1
+  interpolatePosition: 1
+  interpolateRotation: 0
+  interpolateScale: 0
+  coordinateSpace: 0
+  timelineOffset: 1
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  bufferResetMultiplier: 3
+  useFixedUpdate: 0
+  positionSensitivity: 0.01
+  rotationSensitivity: 0.01
+  scaleSensitivity: 0.01
+--- !u!114 &2451660734070372498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1908577308967311437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1494896348e5243e0a0519d1dd09e398, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  _speed: 5
+  shouldFreezePlayerController: 0
 --- !u!1 &6328859784305977576
 GameObject:
   m_ObjectHideFlags: 0
@@ -360,6 +435,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8883946972687429210
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -405,6 +481,7 @@ SpriteRenderer:
   m_SortingLayerID: 1744218633
   m_SortingLayer: 3
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
   m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_FlipX: 0
@@ -414,7 +491,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!61 &1274277734698321065
 BoxCollider2D:
@@ -488,6 +564,7 @@ GameObject:
   - component: {fileID: 8858167169499759584}
   - component: {fileID: 5669517946927527451}
   - component: {fileID: 8506362056901354270}
+  - component: {fileID: 8691022343422375742}
   m_Layer: 5
   m_Name: HeartsContainer
   m_TagString: Untagged
@@ -576,3 +653,15 @@ MonoBehaviour:
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
+--- !u!225 &8691022343422375742
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6943935390467531922}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

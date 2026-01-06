@@ -1,7 +1,8 @@
+using Mirror;
 using UnityEngine;
 using UnityEngine.VFX;
 
-public abstract class Entity : MonoBehaviour, IDamagable
+public abstract class Entity : NetworkBehaviour, IDamagable
 {
     protected Rigidbody2D _rb;
     protected EntityVisualHandler _visual;
@@ -19,6 +20,8 @@ public abstract class Entity : MonoBehaviour, IDamagable
         _rb = GetComponent<Rigidbody2D>();
         _visual = GetComponent<EntityVisualHandler>();
         _health = _maxHealth;
+
+        
     }
 }
 
@@ -35,6 +38,15 @@ public abstract class EntityPlayer : Entity
 
     public int EnemyKillCount { set; get; }
     protected EntityPlayerType _type;
+
+    protected virtual void Start()
+    {
+        GameManager.Instance.PlayerList.Add(this);
+        if(isLocalPlayer)
+        {
+            GameManager.Instance.SetControllablePlayer(this);
+        }
+    }
 
     void OnDestroy()
     {
