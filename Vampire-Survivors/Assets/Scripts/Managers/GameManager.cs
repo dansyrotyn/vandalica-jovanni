@@ -1,11 +1,10 @@
-using Coherence.Toolkit;
-using System;
-using System.Collections.Generic;
 using TMPro;
-using Unity.Cinemachine;
 using UnityEngine;
-using UnityEngine.Events;
+using System.Collections.Generic;
 using UnityEngine.Tilemaps;
+using Unity.Cinemachine;
+using UnityEngine.Events;
+using System;
 
 // then there could be like a formula you could derive from this data
 public struct PlayerScoreInfo
@@ -36,14 +35,14 @@ public class GameManager : MonoBehaviour
 
     // NOTE(Jovanni):
     // Using a linked list here for enemy list because there are lots of insertions and delations
-    public List<EntityPlayer> PlayerList = new();
+    public List<EntityPlayer> PlayerList { get; set; }
     public LinkedList<EntityEnemy> EnemyList { get; set; }
 
     public List<PlayerScoreInfo> PlayerScores { get; set; }
 
     private Entity _controllablePlayer;
     private List<Vector3> _playableArea;
-    private CoherenceBridge bridge;
+  
 
     public bool IsPaused() => _isPaused;
     public List<Vector3> GetPlayableArea() => _playableArea;
@@ -74,9 +73,8 @@ public class GameManager : MonoBehaviour
             Instance = this;
         }
 
-
-        PlayerScores = new List<PlayerScoreInfo>();
-        //PlayerList = new List<EntityPlayer>();
+        PlayerScores  = new List<PlayerScoreInfo>();
+        PlayerList = new List<EntityPlayer>();
         EnemyList = new LinkedList<EntityEnemy>();
     }
 
@@ -99,36 +97,27 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-        _controllablePlayer = PlayerList[0];
-        //_controllablePlayer = PlayerSpawner.Instance.SpawnPlayer(false).GetComponent<EntityPlayer>();
-        //_cinemachineCamera.Follow = _controllablePlayer.transform;
-        //_cinemachineCamera.LookAt = _controllablePlayer.transform;
 
-        //PlayerSpawner.Instance.SpawnPlayer(true);
-        //PlayerSpawner.Instance.SpawnPlayer(true);
-        //PlayerSpawner.Instance.SpawnPlayer(true);
-        //PlayerSpawner.Instance.SpawnPlayer(true);
-        //PlayerSpawner.Instance.SpawnPlayer(true);
-        CoherenceBridgeStore.TryGetBridge(gameObject.scene, out bridge);
-        
-        
+        _controllablePlayer = PlayerSpawner.Instance.SpawnPlayer(false).GetComponent<EntityPlayer>();
+        _cinemachineCamera.Follow = _controllablePlayer.transform;
+        _cinemachineCamera.LookAt = _controllablePlayer.transform;
 
+        PlayerSpawner.Instance.SpawnPlayer(true);
+        PlayerSpawner.Instance.SpawnPlayer(true);
+        PlayerSpawner.Instance.SpawnPlayer(true);
+        PlayerSpawner.Instance.SpawnPlayer(true);
+        PlayerSpawner.Instance.SpawnPlayer(true);
     }
 
     void Update()
     {
-        if (bridge == null || !bridge.IsConnected)
-        {
-            return;
-        }
-
         if (_showingFinalScoreInfo) return;
         if (PlayerList.Count == 0)
         {
             _finalScoreUI.SetActive(true);
             foreach (PlayerScoreInfo info in PlayerScores)
             {
-
+                
                 GameObject scoreCard = Instantiate(_playerScoreInfoPrefab, _finalScoreUI.transform);
                 ScoreCardInfo uiInfo = scoreCard.GetComponent<ScoreCardInfo>();
                 uiInfo.image.sprite = info.spirte;
@@ -173,48 +162,11 @@ public class GameManager : MonoBehaviour
         // This is probably not great for performance 
         // because you are doing allocations of some kind every frame.
         _timeText.text = "Time: " + _monotonicTimer.ToString("0.00");
-        if (EnemyWaveSpawner.Instance.IsLocal)
-        {
-            if (!EnemyWaveSpawner.Instance.IsOnCooldown())
-            {
-                EnemyWaveSpawner.Instance.SpawnNextWave();
-                _waveText.text = "Wave: " + EnemyWaveSpawner.Instance.GetWaveNumber();
-            }
-        }
-        else
-        {
-            if(lastWave != EnemyWaveSpawner.Instance.GetWaveNumber())
-            {
-                _waveText.text = "Wave: " + EnemyWaveSpawner.Instance.GetWaveNumber();
-            }
-            lastWave = EnemyWaveSpawner.Instance.GetWaveNumber();
-        }
 
-    }
-
-    int lastWave = 0;
-
-    internal void RegisterEntity(Entity entity)
-    {
-        if(entity is EntityPlayer player)
+        if (!EnemyWaveSpawner.Instance.IsOnCooldown())
         {
-            PlayerList.Add(player);
-        }
-        else if (entity is EntityEnemy enemy)
-        {
-            EnemyList.AddLast(enemy);
-        }
-    }
-
-    internal void UnregisterEntity(Entity entity)
-    {
-        if (entity is EntityPlayer player)
-        {
-            PlayerList.Remove(player);
-        }
-        else if (entity is EntityEnemy enemy)
-        {
-            EnemyList.Remove(enemy);
+            EnemyWaveSpawner.Instance.SpawnNextWave();
+            _waveText.text = "Wave: " + EnemyWaveSpawner.Instance.GetWaveNumber();
         }
     }
 }

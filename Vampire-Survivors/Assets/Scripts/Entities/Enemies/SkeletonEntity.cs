@@ -16,10 +16,7 @@ public class SkeletonEntity : EntityEnemy
 
     public override void Damage(int damage)
     {
-        if (IsLocal)
-        {
-            Health -= damage;
-        }
+        _health -= damage;
     }
 
     private EntityPlayer GetClosestPlayer()
@@ -44,9 +41,8 @@ public class SkeletonEntity : EntityEnemy
         return null;
     }
 
-    protected override void Start()
+    private void Start()
     {
-        base.Start();
         _follow = GetComponent<FollowGameObject>();
     }
 
@@ -71,11 +67,12 @@ public class SkeletonEntity : EntityEnemy
             _visual.Animator.SetTrigger(ANIM_TRIGGER_ATTACK_1);
         }
 
-        if (Health <= 0)
+        if (_health <= 0)
         {
             _isDead = true;
             _visual.FadeOutDeathTask(ANIM_DEATH, true).ContinueWith(_ =>
                 {
+                    GameManager.Instance.EnemyList.Remove(this);
                     Destroy(this.gameObject);
                 },
 
