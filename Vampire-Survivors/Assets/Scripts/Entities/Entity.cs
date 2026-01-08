@@ -6,22 +6,23 @@ public abstract class Entity : NetworkBehaviour, IDamagable
 {
     protected Rigidbody2D _rb;
     protected EntityVisualHandler _visual;
+    protected Collider2D _collider;
 
     [Header("Entity Info")]
-    [SerializeField] protected int _health;
+    
+    [SyncVar] protected int _health;
     [SerializeField] protected int _maxHealth;
     [SerializeField] protected bool _isDead;
 
-    public abstract void Damage(int dmg);
+    public abstract void GetDamage(int dmg);
     public bool IsDead() => _isDead;
 
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
+        _collider = GetComponent<Collider2D>();
         _visual = GetComponent<EntityVisualHandler>();
         _health = _maxHealth;
-
-        
     }
 }
 
@@ -56,6 +57,8 @@ public abstract class EntityPlayer : Entity
         info.killCount = EnemyKillCount;
         info.timeSurvived = GameManager.Instance.GetMonotonicTime();
         GameManager.Instance.PlayerScores.Add(info);
+
+        GameManager.Instance.PlayerList.Remove(this);
     }
 }
 

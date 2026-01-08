@@ -1,3 +1,4 @@
+using Mirror;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -14,7 +15,8 @@ public class SkeletonEntity : EntityEnemy
     private const string ANIM_ATTACK_1 = "SkeletonAttack1";
     private const string ANIM_DEATH = "SkeletonDeathAnim";
 
-    public override void Damage(int damage)
+    [ServerCallback]
+    public override void GetDamage(int damage)
     {
         _health -= damage;
     }
@@ -46,6 +48,8 @@ public class SkeletonEntity : EntityEnemy
         _follow = GetComponent<FollowGameObject>();
     }
 
+    [ServerCallback]
+
     private void Update()
     {
         if (_isDead) return;
@@ -64,29 +68,49 @@ public class SkeletonEntity : EntityEnemy
         if (!_attackingPlayer && isCloseEnoughToAttackPlayer)
         {
             _attackingPlayer = true;
-            _visual.Animator.SetTrigger(ANIM_TRIGGER_ATTACK_1);
+            RpcAttack();
         }
 
         if (_health <= 0)
         {
-            _isDead = true;
-            _visual.FadeOutDeathTask(ANIM_DEATH, true).ContinueWith(_ =>
-                {
-                    GameManager.Instance.EnemyList.Remove(this);
-                    Destroy(this.gameObject);
-                },
+            RpcDeath();
+        }
+    }
+
+    [ClientRpc]
+    void RpcAttack()
+    {
+        _visual.Animator.SetTrigger(ANIM_TRIGGER_ATTACK_1);
+    }
+
+    [ClientRpc]
+    void RpcDeath()
+    {
+        _rb.bodyType = RigidbodyType2D.Kinematic;
+        _collider.enabled = false;
+        _visual.FadeOutDeathTask(ANIM_DEATH, true).ContinueWith(_ =>
+        {
+            GameManager.Instance.EnemyList.Remove(this);
+            ServerDeath();
+        },
 
                 TaskScheduler.FromCurrentSynchronizationContext()
             );
-        }
     }
-    
+
+    [ServerCallback]
+    void ServerDeath()
+    {
+        NetworkServer.Destroy(gameObject);
+    }
+
+    [ServerCallback]
     private void UnityAnimationEvent_TryAttackPlayer()
     {
         float distanceToPlayer = Vector2.Distance(_playerReference.transform.position, transform.position);
         if (distanceToPlayer <= _attackRadius)
         {
-            _playerReference.Damage(1);
+            _playerReference.GetDamage(1);
         }
     }
 

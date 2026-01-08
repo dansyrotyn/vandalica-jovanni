@@ -31,6 +31,11 @@ public class PlayerController : NetworkBehaviour
         {
             GameManager.Instance.ResumeGame();
         }
+
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            CmdTest();
+        }
     }
 
     private void Start()
@@ -47,6 +52,13 @@ public class PlayerController : NetworkBehaviour
         {
             HandleInput();
         }
+    }
+
+
+    [Command]
+    void CmdTest()
+    {
+        Debug.Log("Test Command executed on server.");
     }
 
     private void FixedUpdate()

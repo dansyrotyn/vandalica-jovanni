@@ -24,18 +24,7 @@ public class EnemyWaveSpawner : NetworkBehaviour
     public int GetWaveNumber() => _waveNumber;
     public bool IsOnCooldown() => _spawnCurrnetCooldownTime > 0.0f;
 
-    // expensive don't do this every frame!
-    public List<GameObject> GetEnemies()
-    {
-        List<GameObject> enemies = new List<GameObject>();
-        foreach (Transform child in this.transform)
-        {
-            enemies.Add(child.gameObject);
-        }
-
-        return enemies;
-    }
-
+    [ServerCallback]
     void SpawnOnGroundLayer()
     {
         List<Vector3> playableArea = GameManager.Instance.GetPlayableArea();

@@ -1,12 +1,13 @@
+using Mirror;
 using System.Threading.Tasks;
+using TMPro;
 using UnityEditor.Animations;
 using UnityEngine;
 
 public class KnightEntity : EntityPlayer
 {
     [Header("Knight Entity Info")]
-    [SerializeField] private GameObject _UIHeartGrid;
-    [SerializeField] private GameObject _heartPrefab;
+    [SerializeField] private TMP_Text _UIHeart;
     
     private const string ANIM_TRIGGER_HURT = "Hurt";
     private const string ANIM_BOOL_DEAD = "Dead";
@@ -15,23 +16,23 @@ public class KnightEntity : EntityPlayer
     protected override void Start()
     {
         base.Start();
-        for (int i = 0; i < _maxHealth; i++)
-        {
-            Instantiate(_heartPrefab, _UIHeartGrid.transform);
-        }
+        _UIHeart.text= _health.ToString();
 
         _type = EntityPlayerType.KNIGHT;
     }
 
-    public override void Damage(int damage)
+    [ServerCallback]
+    public override void GetDamage(int damage)
     {
         _health -= damage;
+        RpcOnDamage(_health);
+    }
+
+    [ClientRpc]
+    void RpcOnDamage(int currentHp)
+    {
         _visual.Animator.SetTrigger(ANIM_TRIGGER_HURT);
-        if (_UIHeartGrid.transform.childCount != 0)
-        {
-            Transform child = _UIHeartGrid.transform.GetChild(0);
-            Destroy(child.gameObject);
-        }
+        _UIHeart.text = currentHp.ToString();
     }
 
     private void HandleSpriteFlip()
@@ -42,6 +43,7 @@ public class KnightEntity : EntityPlayer
         }
     }
 
+    [ServerCallback]
     private void Update()
     {
         if (_isDead) return;
@@ -50,14 +52,26 @@ public class KnightEntity : EntityPlayer
         if (_health <= 0)
         {
             _isDead = true;
-            _visual.FadeOutDeathTask(ANIM_DEATH, false).ContinueWith(_ => 
-                {
-                    GameManager.Instance.PlayerList.Remove(this);
-                    Destroy(this.gameObject);
-                }, 
+            RpcDeath();
+        }
+    }
+
+    [ClientRpc]
+    void RpcDeath()
+    {
+        _visual.FadeOutDeathTask(ANIM_DEATH, false).ContinueWith(_ =>
+        {
+            GameManager.Instance.PlayerList.Remove(this);
+            ServerDeath();
+        },
 
                 TaskScheduler.FromCurrentSynchronizationContext()
             );
-        }
+    }
+
+    [ServerCallback]
+    void ServerDeath()
+    {
+        NetworkServer.Destroy(gameObject);
     }
 }

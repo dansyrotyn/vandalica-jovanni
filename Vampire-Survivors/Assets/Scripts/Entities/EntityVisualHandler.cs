@@ -1,8 +1,9 @@
+using Mirror;
 using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class EntityVisualHandler : MonoBehaviour
+public class EntityVisualHandler : NetworkBehaviour
 {
     public SpriteRenderer SpriteRenderer { set; get; }
     public Animator Animator { set; get; }
@@ -17,8 +18,14 @@ public class EntityVisualHandler : MonoBehaviour
     {
         if (target != null)
         {
-            SpriteRenderer.flipX = target.position.x < transform.position.x;
+            RpcFlipX(target.position.x < transform.position.x);
         }
+    }
+
+    [ClientRpc]
+    public void RpcFlipX(bool flip)
+    {
+        SpriteRenderer.flipX = flip;
     }
 
 

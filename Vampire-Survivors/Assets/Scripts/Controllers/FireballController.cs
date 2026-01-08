@@ -14,7 +14,7 @@ public class FireballController : MonoBehaviour
         EntityEnemy enemy = collision.GetComponent<EntityEnemy>();
         if (enemy != null)
         {
-            enemy.Damage(1);
+            enemy.GetDamage(1);
 
             Transform parent = this.gameObject.transform.parent;
             EntityPlayer player = parent.gameObject.GetComponent<EntityPlayer>();

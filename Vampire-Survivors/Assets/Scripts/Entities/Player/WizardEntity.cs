@@ -30,7 +30,7 @@ public class WizardEntity : EntityPlayer
         _type = EntityPlayerType.WIZARD;
     }
 
-    public override void Damage(int damage)
+    public override void GetDamage(int damage)
     {
         _health -= damage;
         _visual.Animator.SetTrigger(ANIM_TRIGGER_HURT);
@@ -63,7 +63,7 @@ public class WizardEntity : EntityPlayer
         EntityEnemy enemy = collision.GetComponent<EntityEnemy>();
         if (enemy != null)
         {
-            enemy.Damage(1);
+            enemy.GetDamage(1);
             EnemyKillCount += 1;
         }
     }
